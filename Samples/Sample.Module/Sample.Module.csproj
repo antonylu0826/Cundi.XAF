@@ -41,6 +41,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Cundi.XAF.ApiKey\Cundi.XAF.ApiKey.csproj" />
     <ProjectReference Include="..\..\Modules\Cundi.XAF.FullTextSearch\Cundi.XAF.FullTextSearch.csproj" />
     <ProjectReference Include="..\..\Modules\Cundi.XAF.Metadata\Cundi.XAF.Metadata.csproj" />
     <ProjectReference Include="..\..\Modules\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />

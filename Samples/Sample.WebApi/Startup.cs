@@ -1,4 +1,5 @@
-﻿using Cundi.XAF.Triggers.Api;
+﻿using Cundi.XAF.ApiKey.Api.Extensions;
+using Cundi.XAF.Triggers.Api;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
@@ -55,7 +56,8 @@ public class Startup
                     options.ReportDataType = typeof(DevExpress.Persistent.BaseImpl.ReportDataV2);
                 })
                 .AddValidation()
-                .Add<Sample.Module.SampleModule>();
+                .Add<Sample.Module.SampleModule>()
+                .Add<Cundi.XAF.ApiKey.Api.ApiKeyApiModule>();
 
             builder.ObjectSpaceProviders
                 .AddSecuredXpo((serviceProvider, options) =>
@@ -136,12 +138,14 @@ public class Startup
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Jwt:IssuerSigningKey"])),
                     AuthenticationType = JwtBearerDefaults.AuthenticationScheme
                 };
-            });
+            })
+            .AddApiKey(); ;
 
         services.AddAuthorization(options =>
         {
             options.DefaultPolicy = new AuthorizationPolicyBuilder(
-                JwtBearerDefaults.AuthenticationScheme)
+                JwtBearerDefaults.AuthenticationScheme,
+                Cundi.XAF.ApiKey.Api.Authentication.ApiKeyAuthenticationHandler.SchemeName)
                     .RequireAuthenticatedUser()
                     .RequireXafAuthentication()
                     .Build();
@@ -164,12 +168,28 @@ public class Startup
                 BearerFormat = "JWT",
                 In = ParameterLocation.Header
             });
+            c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme()
+            {
+                Type = SecuritySchemeType.ApiKey,
+                Name = "X-API-Key",
+                In = ParameterLocation.Header,
+                Description = "API Key authentication. Enter your API Key in the format: cak_xxxxx"
+            });
             c.AddSecurityRequirement(new OpenApiSecurityRequirement() {
                 {
                     new OpenApiSecurityScheme() {
                         Reference = new OpenApiReference() {
                             Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
                             Id = "JWT"
+                        }
+                    },
+                    new string[0]
+                },
+                {
+                    new OpenApiSecurityScheme() {
+                        Reference = new OpenApiReference() {
+                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "ApiKey"
                         }
                     },
                     new string[0]

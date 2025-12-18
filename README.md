@@ -11,6 +11,8 @@ Core functionalities are located in the `Modules` directory:
 *   **Cundi.XAF.Metadata**: Module for scanning and recording system metadata (Types and Properties).
 *   **Cundi.XAF.Metadata.Api**: REST API extensions for the Metadata module.
 *   **Cundi.XAF.FullTextSearch**: Global full-text search module, enabling search across all business objects from a single entry point.
+*   **Cundi.XAF.ApiKey**: API Key generation and management module, supporting secure key generation with expiration settings.
+*   **Cundi.XAF.ApiKey.Api**: API Key authentication handler for Web API, integrating with XAF Security System.
 
 ## Samples
 
@@ -32,3 +34,5 @@ Implementation examples for each platform are located in the `Samples` directory
 - [Cundi.XAF.Triggers](Modules/Cundi.XAF.Triggers/README.md)
 - [Cundi.XAF.Metadata](Modules/Cundi.XAF.Metadata/README.md)
 - [Cundi.XAF.FullTextSearch](Modules/Cundi.XAF.FullTextSearch/README.md)
+- [Cundi.XAF.ApiKey](Modules/Cundi.XAF.ApiKey/README.md)
+- [Cundi.XAF.ApiKey.Api](Modules/Cundi.XAF.ApiKey.Api/README.md)

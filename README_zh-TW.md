@@ -11,6 +11,8 @@
 *   **Cundi.XAF.Metadata**: 系統元數據 (Metadata) 管理模組，負責掃描並記錄物件類型與屬性。
 *   **Cundi.XAF.Metadata.Api**: Metadata 模組的 REST API 擴充。
 *   **Cundi.XAF.FullTextSearch**: 全域全文檢索模組，透過單一入口搜尋所有業務物件。
+*   **Cundi.XAF.ApiKey**: API Key 產生與管理模組，支援安全金鑰產生與過期設定。
+*   **Cundi.XAF.ApiKey.Api**: Web API 的 API Key 認證處理模組，與 XAF 安全系統整合。
 
 ## 範例 (Samples)
 
@@ -32,3 +34,5 @@
 - [Cundi.XAF.Triggers](Modules/Cundi.XAF.Triggers/README_zh-TW.md)
 - [Cundi.XAF.Metadata](Modules/Cundi.XAF.Metadata/README_zh-TW.md)
 - [Cundi.XAF.FullTextSearch](Modules/Cundi.XAF.FullTextSearch/README_zh-TW.md)
+- [Cundi.XAF.ApiKey](Modules/Cundi.XAF.ApiKey/README_zh-TW.md)
+- [Cundi.XAF.ApiKey.Api](Modules/Cundi.XAF.ApiKey.Api/README_zh-TW.md)
