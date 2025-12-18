@@ -46,6 +46,30 @@ var searchService = new GlobalSearchService(objectSpace, typesInfo)
 
 可覆寫 `GlobalSearchService` 中的 `IsSystemType` 方法來自訂排除的類型。
 
+### 使用 Attribute 控制
+
+使用 Attribute 控制哪些類型和屬性參與全域搜尋：
+
+```csharp
+using Cundi.XAF.FullTextSearch.Attributes;
+
+// 將整個類型排除在全域搜尋之外
+[GlobalSearchable(false)]
+public class InternalConfig : BaseObject
+{
+    // ...
+}
+
+// 排除特定屬性
+public class Customer : BaseObject
+{
+    public string Name { get; set; }
+    
+    [GlobalSearchableProperty(false)]
+    public string InternalNotes { get; set; }  // 不會被搜尋
+}
+```
+
 ## 架構說明
 
 | 檔案 | 說明 |

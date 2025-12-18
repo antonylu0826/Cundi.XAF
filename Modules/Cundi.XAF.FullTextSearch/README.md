@@ -46,6 +46,29 @@ var searchService = new GlobalSearchService(objectSpace, typesInfo)
 
 Override `IsSystemType` in `GlobalSearchService` to customize which types are excluded.
 
+### Control with Attributes
+
+Use attributes to control which types and properties are included in global search:
+
+```csharp
+using Cundi.XAF.FullTextSearch.Attributes;
+
+// Exclude an entire type from global search
+[GlobalSearchable(false)]
+public class InternalConfig : BaseObject
+{
+    // ...
+}
+
+// Exclude specific properties from search
+public class Customer : BaseObject
+{
+    public string Name { get; set; }
+    
+    [GlobalSearchableProperty(false)]
+    public string InternalNotes { get; set; }  // Won't be searched
+}
+
 ## Architecture
 
 | File | Description |

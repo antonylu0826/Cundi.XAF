@@ -1,3 +1,4 @@
+using Cundi.XAF.FullTextSearch.Attributes;
 using Cundi.XAF.FullTextSearch.BusinessObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
@@ -71,7 +72,17 @@ public class GlobalSearchService
         return _typesInfo.PersistentTypes
             .Where(t => t.IsVisible && t.IsPersistent && !t.IsAbstract)
             .Where(t => !IsSystemType(t))
+            .Where(t => IsTypeSearchable(t))
             .ToList();
+    }
+
+    /// <summary>
+    /// Checks if a type is searchable based on GlobalSearchableAttribute.
+    /// </summary>
+    private static bool IsTypeSearchable(ITypeInfo typeInfo)
+    {
+        var attr = typeInfo.FindAttribute<GlobalSearchableAttribute>();
+        return attr?.IsSearchable ?? true; // Default: searchable
     }
 
     /// <summary>
@@ -135,6 +146,7 @@ public class GlobalSearchService
             .Where(m => m.IsPersistent || m.IsPublic)
             .Where(m => !m.Name.Contains("Password") && !m.Name.Contains("Hash"))
             .Where(m => !m.Name.StartsWith("_"))
+            .Where(m => IsPropertySearchable(m))
             .ToList();
 
         if (!stringProperties.Any())
@@ -148,6 +160,15 @@ public class GlobalSearchService
             .ToList();
 
         return CriteriaOperator.Or(conditions.ToArray());
+    }
+
+    /// <summary>
+    /// Checks if a property is searchable based on GlobalSearchablePropertyAttribute.
+    /// </summary>
+    private static bool IsPropertySearchable(IMemberInfo memberInfo)
+    {
+        var attr = memberInfo.FindAttribute<GlobalSearchablePropertyAttribute>();
+        return attr?.IsSearchable ?? true; // Default: searchable
     }
 
     /// <summary>
@@ -194,3 +215,4 @@ public class GlobalSearchService
         return string.Join(" | ", matchedProperties.Take(3));
     }
 }
+

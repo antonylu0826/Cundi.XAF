@@ -1,10 +1,12 @@
 ﻿using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl;
 using DevExpress.Xpo;
+using Cundi.XAF.FullTextSearch.Attributes;
 
 namespace Sample.Module.BusinessObjects;
 
 [DefaultClassOptions]
+[GlobalSearchable]
 public class FullTextSearch1 : BaseObject
 {
     public FullTextSearch1(Session session) : base(session) { }
