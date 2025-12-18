@@ -1,6 +1,6 @@
 # Cundi.XAF
 
-This solution focuses on extending the Triggers functionality of the XAF framework.
+This solution provides a collection of extended modules for the DevExpress eXpressApp Framework (XAF), aiming to enhance system capabilities and development efficiency.
 
 ## Modules
 
@@ -8,6 +8,8 @@ Core functionalities are located in the `Modules` directory:
 
 *   **Cundi.XAF.Triggers**: Core Triggers module, providing trigger-related logic and implementation.
 *   **Cundi.XAF.Triggers.Api**: API integration module for Triggers, supporting trigger operations in Web API environments.
+*   **Cundi.XAF.Metadata**: Module for scanning and recording system metadata (Types and Properties).
+*   **Cundi.XAF.Metadata.Api**: REST API extensions for the Metadata module.
 
 ## Samples
 

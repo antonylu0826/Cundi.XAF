@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Cundi.XAF.Metadata.Api\Cundi.XAF.Metadata.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Cundi.XAF.Triggers.Api\Cundi.XAF.Triggers.Api.csproj" />
     <ProjectReference Include="..\Sample.Module\Sample.Module.csproj" />
   </ItemGroup>
