@@ -6,6 +6,7 @@
 
 - **物件變更偵測 (Object Change Detection)**：監控 XAF 業務物件的建立 (Create)、修改 (Modify) 和刪除 (Delete) 操作
 - **觸發規則 (Trigger Rules)**：定義規則以指定哪些物件類型和事件應觸發 Webhook
+- **條件篩選 (Criteria Filtering)**：使用 XAF Criteria 表達式篩選，僅符合條件的物件才會觸發
 - **彈性的 HTTP 方法 (Flexible HTTP Methods)**：支援 POST、GET、PUT、PATCH 和 DELETE 方法
 - **執行記錄 (Execution Logging)**：追蹤所有觸發執行，包含詳細的狀態和回應資訊
 - **非同步執行 (Async Execution) (WinForms/Blazor)**：不阻塞 UI 效能的 Webhook 呼叫
@@ -38,28 +39,11 @@
     RequiredModuleTypes.Add(typeof(Cundi.XAF.Triggers.TriggersModule));
     ```
 
+3.  執行應用程式以更新資料庫結構。
+
 ### WebApi
 
-1.  新增兩個專案參考：
-    ```xml
-    <ItemGroup>
-      <ProjectReference Include="..\Modules\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />
-      <ProjectReference Include="..\Modules\Cundi.XAF.Triggers.Api\Cundi.XAF.Triggers.Api.csproj" />
-    </ItemGroup>
-    ```
-
-2.  在 `Startup.cs` 中註冊自訂 DataService：
-    ```csharp
-    using Cundi.XAF.Triggers.Api;
-    
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddScoped<IDataService, WebApiMiddleDataService>();
-        // ... 其他服務
-    }
-    ```
-
-3.  執行應用程式以更新資料庫結構。
+如需在 WebApi 中使用觸發器，請參閱 [Cundi.XAF.Triggers.Api](../Cundi.XAF.Triggers.Api/README_zh-TW.md) 模組。
 
 ## 使用方式
 
@@ -75,6 +59,31 @@
     - **HttpMethod**：選擇 HTTP 方法 (預設：POST)
     - **Webhook URL**：接收通知的端點
     - **Is Active**：啟用/停用規則
+    - **OnlyObjectFitsCriteria**：勾選以啟用條件篩選
+    - **Criteria**：設定物件必須符合的條件 (僅當 OnlyObjectFitsCriteria 啟用時顯示)
+
+### 設定條件篩選 (Setting Up Criteria Filtering)
+
+當您只想針對符合特定條件的物件觸發 Webhook 時，可以使用條件篩選功能：
+
+1. 勾選 **OnlyObjectFitsCriteria** 啟用條件篩選
+2. 在顯示的 **Criteria** 欄位中，點擊編輯按鈕開啟 Criteria Editor
+3. 使用視覺化編輯器或直接輸入 Criteria 表達式
+
+**Criteria 範例**：
+
+```
+// 僅當 Status 為 Active 時觸發
+Status = 'Active'
+
+// 多條件組合
+Status = 'Active' AND Amount > 1000
+
+// 使用關聯屬性
+Customer.VIP = True
+```
+
+> **注意**：刪除事件 (OnRemoved) 不支援條件篩選，因為物件在觸發時已不存在。
 
 ### 測試 Webhook (Testing Webhooks)
 
@@ -134,6 +143,8 @@
 | `HttpMethod` | enum | HTTP 方法 (Post, Get, Put, Patch, Delete) |
 | `WebhookUrl` | string | 目標 Webhook URL |
 | `CustomHeaders` | string | 自訂 HTTP 標頭的 JSON 物件 |
+| `OnlyObjectFitsCriteria` | bool | 啟用條件篩選，僅符合 Criteria 的物件才會觸發 |
+| `Criteria` | string | 物件必須符合的條件表達式 (使用 XAF Criteria 語法) |
 
 ### 自訂標頭範例
 

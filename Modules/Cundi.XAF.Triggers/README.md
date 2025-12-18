@@ -6,6 +6,7 @@ A DevExpress XAF module that detects object changes and triggers external webhoo
 
 - **Object Change Detection**: Monitor XAF business objects for Create, Modify, and Delete operations
 - **Trigger Rules**: Define rules to specify which object types and events should trigger webhooks
+- **Criteria Filtering**: Use XAF Criteria expressions to filter objects, only matching objects will trigger
 - **Flexible HTTP Methods**: Support for POST, GET, PUT, PATCH, and DELETE methods
 - **Execution Logging**: Track all trigger executions with detailed status and response information  
 - **Async Execution (WinForms/Blazor)**: Non-blocking webhook calls that don't impact UI performance
@@ -38,28 +39,11 @@ The module supports two execution contexts:
    RequiredModuleTypes.Add(typeof(Cundi.XAF.Triggers.TriggersModule));
    ```
 
+3. Update database schema by running your application.
+
 ### WebApi
 
-1. Add both project references:
-   ```xml
-   <ItemGroup>
-     <ProjectReference Include="..\Modules\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />
-     <ProjectReference Include="..\Modules\Cundi.XAF.Triggers.Api\Cundi.XAF.Triggers.Api.csproj" />
-   </ItemGroup>
-   ```
-
-2. Register the custom DataService in `Startup.cs`:
-   ```csharp
-   using Cundi.XAF.Triggers.Api;
-   
-   public void ConfigureServices(IServiceCollection services)
-   {
-       services.AddScoped<IDataService, WebApiMiddleDataService>();
-       // ... other services
-   }
-   ```
-
-3. Update database schema by running your application.
+For WebApi integration, see the [Cundi.XAF.Triggers.Api](../Cundi.XAF.Triggers.Api/README.md) module.
 
 ## Usage
 
@@ -75,6 +59,31 @@ The module supports two execution contexts:
    - **HttpMethod**: Select HTTP method (default: POST)
    - **Webhook URL**: The endpoint to receive notifications
    - **Is Active**: Enable/disable the rule
+   - **OnlyObjectFitsCriteria**: Check to enable criteria filtering
+   - **Criteria**: Set the criteria that objects must match (only visible when OnlyObjectFitsCriteria is enabled)
+
+### Setting Up Criteria Filtering
+
+When you only want to trigger webhooks for objects that meet specific conditions, use the criteria filtering feature:
+
+1. Check **OnlyObjectFitsCriteria** to enable criteria filtering
+2. In the **Criteria** field that appears, click the edit button to open the Criteria Editor
+3. Use the visual editor or enter a Criteria expression directly
+
+**Criteria Examples**:
+
+```
+// Trigger only when Status is Active
+Status = 'Active'
+
+// Multiple conditions
+Status = 'Active' AND Amount > 1000
+
+// Using related properties
+Customer.VIP = True
+```
+
+> **Note**: Delete events (OnRemoved) do not support criteria filtering, as the object no longer exists at trigger time.
 
 ### Testing Webhooks
 
@@ -134,6 +143,8 @@ Navigate to **Trigger Logs** to see execution history including:
 | `HttpMethod` | enum | HTTP method (Post, Get, Put, Patch, Delete) |
 | `WebhookUrl` | string | Target webhook URL |
 | `CustomHeaders` | string | JSON object with custom HTTP headers |
+| `OnlyObjectFitsCriteria` | bool | Enable criteria filtering, only objects matching Criteria will trigger |
+| `Criteria` | string | Criteria expression that objects must match (uses XAF Criteria syntax) |
 
 ### Custom Headers Example
 

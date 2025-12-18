@@ -1,4 +1,6 @@
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.ConditionalAppearance;
+using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl;
@@ -13,6 +15,7 @@ namespace Cundi.XAF.Triggers.BusinessObjects;
 /// then executes a webhook when conditions are met.
 /// </summary>
 [ImageName("Action_Inline_Edit")]
+[DefaultClassOptions]
 public class TriggerRule : BaseObject
 {
     public TriggerRule(Session session) : base(session) { }
@@ -157,6 +160,36 @@ public class TriggerRule : BaseObject
     {
         get => _customHeaders;
         set => SetPropertyValue(nameof(CustomHeaders), ref _customHeaders, value);
+    }
+
+    private bool _onlyObjectFitsCriteria;
+    /// <summary>
+    /// When enabled, only objects that match the Criteria will trigger the webhook.
+    /// </summary>
+    [ImmediatePostData]
+    [Description("When enabled, only objects that match the Criteria will trigger the webhook.")]
+    public bool OnlyObjectFitsCriteria
+    {
+        get => _onlyObjectFitsCriteria;
+        set => SetPropertyValue(nameof(OnlyObjectFitsCriteria), ref _onlyObjectFitsCriteria, value);
+    }
+
+    private string? _criteria;
+    /// <summary>
+    /// The criteria that the object must meet for the trigger to execute.
+    /// Only visible when OnlyObjectFitsCriteria is enabled.
+    /// </summary>
+    [CriteriaOptions(nameof(TargetType))]
+    [EditorAlias(EditorAliases.CriteriaPropertyEditor)]
+    [Size(SizeAttribute.Unlimited)]
+    [VisibleInListView(false)]
+    [Appearance("HideCriteria", Visibility = DevExpress.ExpressApp.Editors.ViewItemVisibility.Hide,
+        Criteria = "OnlyObjectFitsCriteria = False", Context = "DetailView")]
+    [Description("The criteria that the object must meet for the trigger to execute. Leave empty to trigger for all objects.")]
+    public string? Criteria
+    {
+        get => _criteria;
+        set => SetPropertyValue(nameof(Criteria), ref _criteria, value);
     }
 
     /// <summary>

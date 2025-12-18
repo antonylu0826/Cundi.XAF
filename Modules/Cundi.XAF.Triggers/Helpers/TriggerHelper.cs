@@ -1,7 +1,10 @@
 using Cundi.XAF.Triggers.BusinessObjects;
 using Cundi.XAF.Triggers.Services;
+using DevExpress.Data.Filtering;
+using DevExpress.Data.Filtering.Helpers;
 using DevExpress.ExpressApp;
 using DevExpress.Xpo;
+using System.ComponentModel;
 
 namespace Cundi.XAF.Triggers.Helpers;
 
@@ -167,6 +170,20 @@ public static class TriggerHelper
 
             foreach (var rule in matchingRules)
             {
+                // Check if object fits criteria when OnlyObjectFitsCriteria is enabled
+                if (rule.OnlyObjectFitsCriteria && !string.IsNullOrWhiteSpace(rule.Criteria))
+                {
+                    // Skip deleted objects since they can't be evaluated
+                    if (eventType == TriggerEventType.Deleted)
+                    {
+                        // For deleted objects, skip criteria check - they will always trigger
+                    }
+                    else if (!IsObjectFitForCriteria(obj, rule.Criteria))
+                    {
+                        continue; // Object doesn't match criteria, skip this rule
+                    }
+                }
+
                 string payload;
 
                 if (eventType == TriggerEventType.Deleted)
@@ -254,6 +271,34 @@ public static class TriggerHelper
             TriggerEventType.Deleted => rule.OnRemoved,
             _ => false
         };
+    }
+
+    /// <summary>
+    /// Evaluates if an object matches the specified criteria expression.
+    /// </summary>
+    /// <param name="obj">The object to evaluate.</param>
+    /// <param name="criteriaString">The criteria expression string.</param>
+    /// <returns>True if the object matches the criteria, false otherwise.</returns>
+    private static bool IsObjectFitForCriteria(object obj, string criteriaString)
+    {
+        try
+        {
+            var criteriaOperator = CriteriaOperator.Parse(criteriaString);
+            if (ReferenceEquals(criteriaOperator, null))
+            {
+                return true; // Empty or invalid criteria, allow all
+            }
+
+            // Use ExpressionEvaluator for in-memory evaluation
+            var evaluator = new ExpressionEvaluator(TypeDescriptor.GetProperties(obj.GetType()), criteriaOperator);
+            var result = evaluator.Fit(obj);
+            return result;
+        }
+        catch
+        {
+            // If criteria evaluation fails, allow the trigger to proceed
+            return true;
+        }
     }
 
     #endregion
