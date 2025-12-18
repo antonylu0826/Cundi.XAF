@@ -37,6 +37,7 @@ public sealed class SampleModule : ModuleBase
 
         RequiredModuleTypes.Add(typeof(Cundi.XAF.Metadata.MetadataModule));
         RequiredModuleTypes.Add(typeof(Cundi.XAF.Triggers.TriggersModule));
+        RequiredModuleTypes.Add(typeof(Cundi.XAF.FullTextSearch.FullTextSearchModule));
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB)
     {
