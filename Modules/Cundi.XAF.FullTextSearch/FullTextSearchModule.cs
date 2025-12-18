@@ -1,6 +1,4 @@
-using Cundi.XAF.FullTextSearch.BusinessObjects;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.DC;
 
 namespace Cundi.XAF.FullTextSearch;
 
@@ -18,10 +16,5 @@ public sealed class FullTextSearchModule : ModuleBase
     {
         base.Setup(application);
     }
-
-    public override void CustomizeTypesInfo(ITypesInfo typesInfo)
-    {
-        base.CustomizeTypesInfo(typesInfo);
-        // GlobalSearchResult is already marked as non-persistent via [DomainComponent] attribute
-    }
 }
+

@@ -1,7 +1,7 @@
-﻿using DevExpress.Persistent.Base;
+﻿using Cundi.XAF.FullTextSearch.Attributes;
+using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl;
 using DevExpress.Xpo;
-using Cundi.XAF.FullTextSearch.Attributes;
 
 namespace Sample.Module.BusinessObjects;
 
