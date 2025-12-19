@@ -1,8 +1,85 @@
-﻿<?xml version="1.0" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
   <Options>
     <LayoutManagerOptions RequiredFieldMark="*" />
   </Options>
+  
+  <!-- Business Objects Localization -->
+  <BOModel>
+    <Class Name="Cundi.XAF.Triggers.BusinessObjects.TriggerRule" Caption="Trigger Rule">
+      <OwnMembers>
+        <Member Name="Name" Caption="Name" />
+        <Member Name="Description" Caption="Description" />
+        <Member Name="TargetType" Caption="Target Type" />
+        <Member Name="OnCreated" Caption="On Created" />
+        <Member Name="OnModified" Caption="On Modified" />
+        <Member Name="OnRemoved" Caption="On Removed" />
+        <Member Name="IsActive" Caption="Is Active" />
+        <Member Name="HttpMethod" Caption="HTTP Method" />
+        <Member Name="WebhookUrl" Caption="Webhook URL" />
+        <Member Name="CustomHeaders" Caption="Custom Headers" />
+        <Member Name="OnlyObjectFitsCriteria" Caption="Only Object Fits Criteria" />
+        <Member Name="Criteria" Caption="Criteria" />
+        <Member Name="TriggerLogs" Caption="Trigger Logs" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.Triggers.BusinessObjects.TriggerLog" Caption="Trigger Log">
+      <OwnMembers>
+        <Member Name="TriggerRule" Caption="Trigger Rule" />
+        <Member Name="ExecutionTime" Caption="Execution Time" />
+        <Member Name="ObjectType" Caption="Object Type" />
+        <Member Name="ObjectKey" Caption="Object Key" />
+        <Member Name="EventType" Caption="Event Type" />
+        <Member Name="HttpMethod" Caption="HTTP Method" />
+        <Member Name="IsSuccess" Caption="Is Success" />
+        <Member Name="StatusCode" Caption="Status Code" />
+        <Member Name="ResponseBody" Caption="Response Body" />
+        <Member Name="ErrorMessage" Caption="Error Message" />
+        <Member Name="Payload" Caption="Payload" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  
+  <!-- Action Localization -->
+  <ActionDesign>
+    <Actions>
+      <Action Id="ClearTriggerLogs" Caption="Clear Logs" ToolTip="Delete all trigger logs associated with this rule" ConfirmationMessage="Are you sure you want to delete all trigger logs for this rule?" IsNewNode="True" />
+      <Action Id="TestWebhook" Caption="Test Webhook" ToolTip="Send a test request to the webhook URL" IsNewNode="True" />
+    </Actions>
+  </ActionDesign>
+  
+  <!-- Localization -->
+  <Localization>
+    <!-- Enum Localization -->
+    <LocalizationGroup Name="Enums">
+      <LocalizationGroup Name="Cundi.XAF.Triggers.BusinessObjects.TriggerEventType" Value="Trigger Event Type" IsNewNode="True">
+        <LocalizationItem Name="Created" Value="Created" IsNewNode="True" />
+        <LocalizationItem Name="Modified" Value="Modified" IsNewNode="True" />
+        <LocalizationItem Name="Deleted" Value="Deleted" IsNewNode="True" />
+      </LocalizationGroup>
+      <LocalizationGroup Name="Cundi.XAF.Triggers.BusinessObjects.HttpMethodType" Value="HTTP Method Type" IsNewNode="True">
+        <LocalizationItem Name="Post" Value="POST" IsNewNode="True" />
+        <LocalizationItem Name="Get" Value="GET" IsNewNode="True" />
+        <LocalizationItem Name="Put" Value="PUT" IsNewNode="True" />
+        <LocalizationItem Name="Patch" Value="PATCH" IsNewNode="True" />
+        <LocalizationItem Name="Delete" Value="DELETE" IsNewNode="True" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+    
+    <!-- Messages Localization -->
+    <LocalizationGroup Name="Messages">
+      <LocalizationGroup Name="Cundi.XAF.Triggers" IsNewNode="True">
+        <LocalizationItem Name="NoLogsToClean" Value="No logs to clear." IsNewNode="True" />
+        <LocalizationItem Name="ClearedLogsCount" Value="Cleared {Count} log(s)." IsNewNode="True" />
+        <LocalizationItem Name="WebhookUrlRequired" Value="Webhook URL is required." IsNewNode="True" />
+        <LocalizationItem Name="TestSuccessful" Value="✓ Test successful! HTTP {StatusCode}" IsNewNode="True" />
+        <LocalizationItem Name="TestFailed" Value="✗ Test failed! {ErrorMessage}" IsNewNode="True" />
+        <LocalizationItem Name="WebhookFiredAsync" Value="(Webhook fired asynchronously)" IsNewNode="True" />
+        <LocalizationItem Name="RequestTimeout" Value="Request timed out" IsNewNode="True" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+  </Localization>
+  
   <Views>
   </Views>
 </Application>

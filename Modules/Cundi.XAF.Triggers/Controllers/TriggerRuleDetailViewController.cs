@@ -1,6 +1,7 @@
 using Cundi.XAF.Triggers.BusinessObjects;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
 using System.Text;
 using System.Text.Json;
@@ -17,22 +18,17 @@ public class TriggerRuleDetailViewController : ObjectViewController<DetailView, 
 
     public TriggerRuleDetailViewController()
     {
-        // Clear Logs Action
+        // Clear Logs Action - Caption, ToolTip, and ConfirmationMessage are defined in Model.DesignedDiffs.xafml
         _clearLogsAction = new SimpleAction(this, "ClearTriggerLogs", PredefinedCategory.RecordEdit)
         {
-            Caption = "Clear Logs",
-            ImageName = "Action_Clear",
-            ConfirmationMessage = "Are you sure you want to delete all trigger logs for this rule?",
-            ToolTip = "Delete all trigger logs associated with this rule"
+            ImageName = "Action_Clear"
         };
         _clearLogsAction.Execute += ClearLogsAction_Execute;
 
-        // Test Webhook Action
+        // Test Webhook Action - Caption and ToolTip are defined in Model.DesignedDiffs.xafml
         _testWebhookAction = new SimpleAction(this, "TestWebhook", PredefinedCategory.RecordEdit)
         {
-            Caption = "Test Webhook",
-            ImageName = "Action_Debug_Start",
-            ToolTip = "Send a test request to the webhook URL"
+            ImageName = "Action_Debug_Start"
         };
         _testWebhookAction.Execute += TestWebhookAction_Execute;
     }
@@ -46,7 +42,9 @@ public class TriggerRuleDetailViewController : ObjectViewController<DetailView, 
 
         if (logsToDelete.Count == 0)
         {
-            Application.ShowViewStrategy.ShowMessage("No logs to clear.", InformationType.Info);
+            Application.ShowViewStrategy.ShowMessage(
+                CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "NoLogsToClean"),
+                InformationType.Info);
             return;
         }
 
@@ -57,7 +55,10 @@ public class TriggerRuleDetailViewController : ObjectViewController<DetailView, 
 
         ObjectSpace.CommitChanges();
 
-        Application.ShowViewStrategy.ShowMessage($"Cleared {logsToDelete.Count} log(s).", InformationType.Success);
+        Application.ShowViewStrategy.ShowMessage(
+            CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "ClearedLogsCount")
+                .Replace("{Count}", logsToDelete.Count.ToString()),
+            InformationType.Success);
     }
 
     private void TestWebhookAction_Execute(object? sender, SimpleActionExecuteEventArgs e)
@@ -67,7 +68,9 @@ public class TriggerRuleDetailViewController : ObjectViewController<DetailView, 
 
         if (string.IsNullOrWhiteSpace(rule.WebhookUrl))
         {
-            Application.ShowViewStrategy.ShowMessage("Webhook URL is required.", InformationType.Error);
+            Application.ShowViewStrategy.ShowMessage(
+                CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "WebhookUrlRequired"),
+                InformationType.Error);
             return;
         }
 
@@ -85,21 +88,25 @@ public class TriggerRuleDetailViewController : ObjectViewController<DetailView, 
 
             if (result.IsSuccess)
             {
+                var successMsg = CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "TestSuccessful")
+                    .Replace("{StatusCode}", result.StatusCode.ToString());
                 Application.ShowViewStrategy.ShowMessage(
-                    $"✓ Test successful! HTTP {result.StatusCode}\n{result.ResponseBody}",
+                    $"{successMsg}\n{result.ResponseBody}",
                     InformationType.Success);
             }
             else
             {
                 Application.ShowViewStrategy.ShowMessage(
-                    $"✗ Test failed! {result.ErrorMessage}",
+                    CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "TestFailed")
+                        .Replace("{ErrorMessage}", result.ErrorMessage ?? string.Empty),
                     InformationType.Warning);
             }
         }
         catch (Exception ex)
         {
             Application.ShowViewStrategy.ShowMessage(
-                $"✗ Test failed!\n{ex.Message}",
+                CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "TestFailed")
+                    .Replace("{ErrorMessage}", ex.Message),
                 InformationType.Error);
         }
     }

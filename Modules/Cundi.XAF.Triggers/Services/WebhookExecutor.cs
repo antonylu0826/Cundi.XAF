@@ -1,5 +1,6 @@
 using Cundi.XAF.Triggers.BusinessObjects;
 using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Utils;
 using System.Text;
 using System.Text.Json;
 
@@ -39,7 +40,7 @@ public class WebhookExecutor
         try
         {
             LogExecutionByOid(ruleOid, objectType, objectKey, eventType, httpMethod, payload,
-                true, null, "(Webhook fired asynchronously)", null);
+                true, null, CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "WebhookFiredAsync"), null);
         }
         catch
         {
@@ -177,7 +178,7 @@ public class WebhookExecutor
             return new WebhookResult
             {
                 IsSuccess = false,
-                ErrorMessage = "Request timed out"
+                ErrorMessage = CaptionHelper.GetLocalizedText(@"Messages\Cundi.XAF.Triggers", "RequestTimeout")
             };
         }
         catch (HttpRequestException ex)

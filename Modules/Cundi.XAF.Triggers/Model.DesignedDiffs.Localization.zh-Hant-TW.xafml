@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <!-- Business Objects Localization -->
+  <BOModel>
+    <Class Name="Cundi.XAF.Triggers.BusinessObjects.TriggerRule" Caption="觸發規則">
+      <OwnMembers>
+        <Member Name="Name" Caption="名稱" />
+        <Member Name="Description" Caption="說明" />
+        <Member Name="TargetType" Caption="目標類型" />
+        <Member Name="OnCreated" Caption="建立時觸發" />
+        <Member Name="OnModified" Caption="修改時觸發" />
+        <Member Name="OnRemoved" Caption="刪除時觸發" />
+        <Member Name="IsActive" Caption="啟用" />
+        <Member Name="HttpMethod" Caption="HTTP 方法" />
+        <Member Name="WebhookUrl" Caption="Webhook 網址" />
+        <Member Name="CustomHeaders" Caption="自訂標頭" />
+        <Member Name="OnlyObjectFitsCriteria" Caption="僅符合條件的物件" />
+        <Member Name="Criteria" Caption="條件" />
+        <Member Name="TriggerLogs" Caption="觸發紀錄" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.Triggers.BusinessObjects.TriggerLog" Caption="觸發紀錄">
+      <OwnMembers>
+        <Member Name="TriggerRule" Caption="觸發規則" />
+        <Member Name="ExecutionTime" Caption="執行時間" />
+        <Member Name="ObjectType" Caption="物件類型" />
+        <Member Name="ObjectKey" Caption="物件鍵值" />
+        <Member Name="EventType" Caption="事件類型" />
+        <Member Name="HttpMethod" Caption="HTTP 方法" />
+        <Member Name="IsSuccess" Caption="成功" />
+        <Member Name="StatusCode" Caption="狀態碼" />
+        <Member Name="ResponseBody" Caption="回應內容" />
+        <Member Name="ErrorMessage" Caption="錯誤訊息" />
+        <Member Name="Payload" Caption="請求內容" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  
+  <!-- Action Localization -->
+  <ActionDesign>
+    <Actions>
+      <Action Id="ClearTriggerLogs" Caption="清除紀錄" ToolTip="刪除與此規則相關的所有觸發紀錄" ConfirmationMessage="確定要刪除此規則的所有觸發紀錄嗎？" />
+      <Action Id="TestWebhook" Caption="測試 Webhook" ToolTip="發送測試請求到 Webhook 網址" />
+    </Actions>
+  </ActionDesign>
+  
+  <!-- Localization -->
+  <Localization>
+    <!-- Enum Localization -->
+    <LocalizationGroup Name="Enums">
+      <LocalizationGroup Name="Cundi.XAF.Triggers.BusinessObjects.TriggerEventType" Value="觸發事件類型">
+        <LocalizationItem Name="Created" Value="已建立" />
+        <LocalizationItem Name="Modified" Value="已修改" />
+        <LocalizationItem Name="Deleted" Value="已刪除" />
+      </LocalizationGroup>
+      <LocalizationGroup Name="Cundi.XAF.Triggers.BusinessObjects.HttpMethodType" Value="HTTP 方法類型">
+        <LocalizationItem Name="Post" Value="POST" />
+        <LocalizationItem Name="Get" Value="GET" />
+        <LocalizationItem Name="Put" Value="PUT" />
+        <LocalizationItem Name="Patch" Value="PATCH" />
+        <LocalizationItem Name="Delete" Value="DELETE" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+    
+    <!-- Messages Localization -->
+    <LocalizationGroup Name="Messages">
+      <LocalizationGroup Name="Cundi.XAF.Triggers">
+        <LocalizationItem Name="NoLogsToClean" Value="沒有紀錄可清除。" />
+        <LocalizationItem Name="ClearedLogsCount" Value="已清除 {Count} 筆紀錄。" />
+        <LocalizationItem Name="WebhookUrlRequired" Value="必須輸入 Webhook 網址。" />
+        <LocalizationItem Name="TestSuccessful" Value="✓ 測試成功！HTTP {StatusCode}" />
+        <LocalizationItem Name="TestFailed" Value="✗ 測試失敗！{ErrorMessage}" />
+        <LocalizationItem Name="WebhookFiredAsync" Value="(Webhook 已非同步觸發)" />
+        <LocalizationItem Name="RequestTimeout" Value="請求逾時" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+  </Localization>
+</Application>
