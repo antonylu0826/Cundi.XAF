@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
-  <Options UIType="TabbedMDI"
-         RestoreTabbedMdiLayout="True"
-         ShowTabImage="True"
-         VirtualScrollingEnabled="True">
-  </Options>
-  <NavigationItems NavigationStyle="Accordion">
-  </NavigationItems>
+  <NavigationItems NavigationStyle="Accordion" />
+  <Options UIType="TabbedMDI" RestoreTabbedMdiLayout="True" ShowTabImage="True" VirtualScrollingEnabled="True" />
+  <SchemaModules>
+    <SchemaModule Name="SchedulerBlazorModule" Version="24.2.12.0" IsNewNode="True" />
+    <SchemaModule Name="SchedulerModuleBase" Version="24.2.12.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="24.2.12.0" IsNewNode="True" />
+  </SchemaModules>
 </Application>

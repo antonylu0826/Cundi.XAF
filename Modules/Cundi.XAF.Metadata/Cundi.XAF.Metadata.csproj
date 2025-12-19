@@ -9,9 +9,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
     <None Remove="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>

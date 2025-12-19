@@ -1,2 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Application />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <ActionDesign>
+    <Actions>
+      <Action Id="GenerateApiKey" Caption="Generate API Key" ToolTip="Generate a new API key for this user. Any existing key will be replaced." IsNewNode="True" />
+      <Action Id="RevokeApiKey" Caption="Revoke API Key" ToolTip="Revoke the API key for this user." ConfirmationMessage="This will permanently revoke the API Key for the selected user. Continue?" IsNewNode="True" />
+    </Actions>
+  </ActionDesign>
+  <BOModel>
+    <Class Name="Cundi.XAF.ApiKey.BusinessObjects.ApiKeyInfo" Caption="API Key">
+      <OwnMembers>
+        <Member Name="CreatedAt" Caption="Created At" />
+        <Member Name="Description" Caption="Description" />
+        <Member Name="ExpiresAt" Caption="Expires At" />
+        <Member Name="IsActive" Caption="Is Active" />
+        <Member Name="IsExpired" Caption="Is Expired" />
+        <Member Name="IsValid" Caption="Is Valid" />
+        <Member Name="LastUsedAt" Caption="Last Used At" />
+        <Member Name="UserOid" Caption="User ID" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.ApiKey.Parameters.ApiKeyGenerationParameters" Caption="API Key Generation Parameters">
+      <OwnMembers>
+        <Member Name="Expiration" Caption="Expiration" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.ApiKey.Parameters.ApiKeyResultDisplay" Caption="API Key Result">
+      <OwnMembers>
+        <Member Name="ApiKey" Caption="API Key" />
+        <Member Name="ExpiresAt" Caption="Expires At" />
+        <Member Name="UserName" Caption="User Name" />
+        <Member Name="Warning" Caption="Warning" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  <Localization>
+    <LocalizationGroup Name="Enums">
+      <LocalizationGroup Name="Cundi.XAF.ApiKey.Parameters.ApiKeyExpiration" Value="API Key Expiration" IsNewNode="True">
+        <LocalizationItem Name="Day1" Value="1 Day" IsNewNode="True" />
+        <LocalizationItem Name="Days30" Value="30 Days" IsNewNode="True" />
+        <LocalizationItem Name="Days60" Value="60 Days" IsNewNode="True" />
+        <LocalizationItem Name="Days90" Value="90 Days" IsNewNode="True" />
+        <LocalizationItem Name="Minutes30" Value="30 Minutes" IsNewNode="True" />
+        <LocalizationItem Name="Minutes5" Value="5 Minutes" IsNewNode="True" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+    <LocalizationGroup Name="Messages">
+      <LocalizationGroup Name="Cundi.XAF.ApiKey" IsNewNode="True">
+        <LocalizationItem Name="ApiKeyGeneratedTitle" Value="API Key Generated Successfully" IsNewNode="True" />
+        <LocalizationItem Name="ApiKeyRevoked" Value="API Key for user '{UserName}' has been revoked." IsNewNode="True" />
+        <LocalizationItem Name="ApiKeyWarning" Value="⚠️ IMPORTANT: Copy this key now! It will NOT be shown again. The key has been copied to clipboard." IsNewNode="True" />
+        <LocalizationItem Name="UnableToGetUserId" Value="Unable to get user identifier." IsNewNode="True" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+  </Localization>
+  <SchemaModules>
+    <SchemaModule Name="SystemModule" Version="24.2.12.0" IsNewNode="True" />
+  </SchemaModules>
+</Application>

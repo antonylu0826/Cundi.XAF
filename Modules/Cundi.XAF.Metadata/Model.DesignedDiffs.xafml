@@ -1,3 +1,23 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Application Title="Cundi.XAF.Metadata">
+  <!-- Business Objects Localization -->
+  <BOModel>
+    <Class Name="Cundi.XAF.Metadata.BusinessObjects.MetadataType" Caption="Metadata Type">
+      <OwnMembers>
+        <Member Name="TypeName" Caption="Type Name" />
+        <Member Name="FullName" Caption="Full Name" />
+        <Member Name="AssemblyName" Caption="Assembly Name" />
+        <Member Name="Properties" Caption="Properties" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.Metadata.BusinessObjects.MetadataProperty" Caption="Metadata Property">
+      <OwnMembers>
+        <Member Name="Type" Caption="Type" />
+        <Member Name="PropertyName" Caption="Property Name" />
+        <Member Name="PropertyType" Caption="Property Type" />
+        <Member Name="FriendlyPropertyType" Caption="Friendly Property Type" />
+        <Member Name="Caption" Caption="Caption" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
 </Application>

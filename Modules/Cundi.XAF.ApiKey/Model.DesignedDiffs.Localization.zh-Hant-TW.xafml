@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <ActionDesign>
+    <Actions>
+      <Action Id="GenerateApiKey" Caption="產生 API 金鑰" ToolTip="為此使用者產生新的 API 金鑰，現有的金鑰將被取代。" />
+      <Action Id="RevokeApiKey" Caption="撤銷 API 金鑰" ToolTip="撤銷此使用者的 API 金鑰。" ConfirmationMessage="這將永久撤銷所選使用者的 API 金鑰，確定要繼續嗎？" />
+    </Actions>
+  </ActionDesign>
+  <BOModel>
+    <Class Name="Cundi.XAF.ApiKey.BusinessObjects.ApiKeyInfo" Caption="API 金鑰">
+      <OwnMembers>
+        <Member Name="CreatedAt" Caption="建立時間" />
+        <Member Name="Description" Caption="說明" />
+        <Member Name="ExpiresAt" Caption="到期時間" />
+        <Member Name="IsActive" Caption="啟用" />
+        <Member Name="IsExpired" Caption="已過期" />
+        <Member Name="IsValid" Caption="有效" />
+        <Member Name="LastUsedAt" Caption="最後使用時間" />
+        <Member Name="UserOid" Caption="使用者 ID" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.ApiKey.Parameters.ApiKeyGenerationParameters" Caption="API 金鑰產生參數">
+      <OwnMembers>
+        <Member Name="Expiration" Caption="有效期限" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.ApiKey.Parameters.ApiKeyResultDisplay" Caption="API 金鑰結果">
+      <OwnMembers>
+        <Member Name="ApiKey" Caption="API 金鑰" />
+        <Member Name="ExpiresAt" Caption="到期時間" />
+        <Member Name="UserName" Caption="使用者名稱" />
+        <Member Name="Warning" Caption="警告" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  <Localization>
+    <LocalizationGroup Name="Enums">
+      <LocalizationGroup Name="Cundi.XAF.ApiKey.Parameters.ApiKeyExpiration" Value="API 金鑰有效期限">
+        <LocalizationItem Name="Day1" Value="1 天" />
+        <LocalizationItem Name="Days30" Value="30 天" />
+        <LocalizationItem Name="Days60" Value="60 天" />
+        <LocalizationItem Name="Days90" Value="90 天" />
+        <LocalizationItem Name="Minutes30" Value="30 分鐘" />
+        <LocalizationItem Name="Minutes5" Value="5 分鐘" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+    <LocalizationGroup Name="Messages">
+      <LocalizationGroup Name="Cundi.XAF.ApiKey">
+        <LocalizationItem Name="ApiKeyGeneratedTitle" Value="API 金鑰產生成功" />
+        <LocalizationItem Name="ApiKeyRevoked" Value="使用者 '{UserName}' 的 API 金鑰已撤銷。" />
+        <LocalizationItem Name="ApiKeyWarning" Value="⚠️ 重要：請立即複製此金鑰！之後將無法再次顯示。金鑰已複製到剪貼簿。" />
+        <LocalizationItem Name="UnableToGetUserId" Value="無法取得使用者識別碼。" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+  </Localization>
+</Application>

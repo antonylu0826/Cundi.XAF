@@ -1,3 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
+  <ActionDesign>
+    <Actions>
+      <Action Id="GlobalSearch" Caption="Global Search" ToolTip="Search across all business objects" IsNewNode="True" />
+    </Actions>
+  </ActionDesign>
+  <BOModel>
+    <Class Name="Cundi.XAF.FullTextSearch.BusinessObjects.GlobalSearchResult" Caption="Global Search Result">
+      <OwnMembers>
+        <Member Name="DisplayName" Caption="Name" />
+        <Member Name="MatchedContent" Caption="Matched Content" />
+        <Member Name="TypeCaption" Caption="Type" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  <Localization>
+    <LocalizationGroup Name="Messages">
+      <LocalizationGroup Name="Cundi.XAF.FullTextSearch" IsNewNode="True">
+        <LocalizationItem Name="NoResultsFound" Value="No results found for '{Keyword}'." IsNewNode="True" />
+        <LocalizationItem Name="UnableToCreateObjectSpace" Value="Unable to create ObjectSpace for search." IsNewNode="True" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+  </Localization>
+  <SchemaModules>
+    <SchemaModule Name="SystemModule" Version="24.2.12.0" IsNewNode="True" />
+  </SchemaModules>
 </Application>

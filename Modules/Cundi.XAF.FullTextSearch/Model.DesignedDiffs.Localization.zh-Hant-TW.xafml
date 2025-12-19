@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <ActionDesign>
+    <Actions>
+      <Action Id="GlobalSearch" Caption="全域搜尋" ToolTip="跨所有業務物件搜尋" />
+    </Actions>
+  </ActionDesign>
+  <BOModel>
+    <Class Name="Cundi.XAF.FullTextSearch.BusinessObjects.GlobalSearchResult" Caption="全域搜尋結果">
+      <OwnMembers>
+        <Member Name="DisplayName" Caption="名稱" />
+        <Member Name="MatchedContent" Caption="符合內容" />
+        <Member Name="TypeCaption" Caption="類型" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+  <Localization>
+    <LocalizationGroup Name="Messages">
+      <LocalizationGroup Name="Cundi.XAF.FullTextSearch">
+        <LocalizationItem Name="NoResultsFound" Value="找不到 '{Keyword}' 的搜尋結果。" />
+        <LocalizationItem Name="UnableToCreateObjectSpace" Value="無法建立搜尋用的 ObjectSpace。" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+  </Localization>
+</Application>

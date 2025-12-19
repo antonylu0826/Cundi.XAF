@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <!-- Business Objects Localization -->
+  <BOModel>
+    <Class Name="Cundi.XAF.Metadata.BusinessObjects.MetadataType" Caption="中繼資料類型">
+      <OwnMembers>
+        <Member Name="TypeName" Caption="類型名稱" />
+        <Member Name="FullName" Caption="完整名稱" />
+        <Member Name="AssemblyName" Caption="組件名稱" />
+        <Member Name="Properties" Caption="屬性" />
+      </OwnMembers>
+    </Class>
+    <Class Name="Cundi.XAF.Metadata.BusinessObjects.MetadataProperty" Caption="中繼資料屬性">
+      <OwnMembers>
+        <Member Name="Type" Caption="類型" />
+        <Member Name="PropertyName" Caption="屬性名稱" />
+        <Member Name="PropertyType" Caption="屬性類型" />
+        <Member Name="FriendlyPropertyType" Caption="友善屬性類型" />
+        <Member Name="Caption" Caption="標題" />
+      </OwnMembers>
+    </Class>
+  </BOModel>
+</Application>
