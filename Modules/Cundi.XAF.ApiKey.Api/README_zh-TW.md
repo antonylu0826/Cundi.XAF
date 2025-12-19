@@ -6,6 +6,7 @@
 
 - **X-API-Key Header 認證**：透過 HTTP 標頭進行標準 API Key 認證
 - **XAF 安全整合**：透過 `SignInManager` 完整整合 XAF 權限系統
+- **API Key 管理端點**：提供 RESTful API 端點來產生、查詢和移除 API Key（僅限管理員）
 - **Swagger 支援**：在 Swagger UI 中支援 API Key 授權
 - **多重認證方案**：可與 JWT 認證並行使用
 
@@ -105,9 +106,78 @@ sequenceDiagram
 Cundi.XAF.ApiKey.Api/
 ├── Authentication/
 │   └── ApiKeyAuthenticationHandler.cs  # ASP.NET Core 認證處理器
+├── Controllers/
+│   └── ApiKeyController.cs             # API Key 管理端點
+├── DTOs/
+│   ├── ApiKeyInfoDto.cs                # API Key 資訊回應
+│   ├── GenerateApiKeyRequest.cs        # 產生請求
+│   └── GenerateApiKeyResponse.cs       # 產生回應
 ├── Extensions/
 │   └── ApiKeyExtensions.cs             # AddApiKey() 擴充方法
 └── ApiKeyApiModule.cs
+```
+
+## API Key 管理端點
+
+> **注意：** 這些端點需要管理員權限。
+
+### 產生 API Key
+
+```http
+POST /api/ApiKey/generate
+Content-Type: application/json
+
+{
+  "userOid": "00000000-0000-0000-0000-000000000000",
+  "expiration": "Days30",
+  "description": "我的 API Key"
+}
+```
+
+**過期選項：** `Minutes5`、`Minutes30`、`Day1`、`Days30`、`Days60`、`Days90`
+
+**回應：**
+```json
+{
+  "success": true,
+  "apiKey": "cak_...",
+  "expiresAt": "2025-01-20T00:00:00Z",
+  "message": "API Key 產生成功..."
+}
+```
+
+### 查詢 API Key 資訊
+
+```http
+GET /api/ApiKey/{userOid}
+```
+
+**回應：**
+```json
+{
+  "userOid": "00000000-0000-0000-0000-000000000000",
+  "description": "我的 API Key",
+  "createdAt": "2024-12-20T00:00:00Z",
+  "expiresAt": "2025-01-20T00:00:00Z",
+  "lastUsedAt": null,
+  "isActive": true,
+  "isExpired": false,
+  "isValid": true
+}
+```
+
+### 移除 API Key
+
+```http
+DELETE /api/ApiKey/{userOid}
+```
+
+**回應：**
+```json
+{
+  "success": true,
+  "message": "已移除使用者 Oid '...' 的 API Key。"
+}
 ```
 
 ## 授權

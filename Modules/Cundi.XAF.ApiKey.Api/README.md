@@ -6,6 +6,7 @@ ASP.NET Core Web API authentication module for API Key support in XAF applicatio
 
 - **X-API-Key Header Authentication**: Standard API Key authentication via HTTP header
 - **XAF Security Integration**: Full integration with XAF's permission system via `SignInManager`
+- **API Key Management**: RESTful endpoints to generate, query, and revoke API keys (admin only)
 - **Swagger Support**: API Key authorization in Swagger UI
 - **Multi-Scheme Auth**: Works alongside JWT authentication
 
@@ -105,9 +106,78 @@ sequenceDiagram
 Cundi.XAF.ApiKey.Api/
 ├── Authentication/
 │   └── ApiKeyAuthenticationHandler.cs  # ASP.NET Core auth handler
+├── Controllers/
+│   └── ApiKeyController.cs             # API Key management endpoints
+├── DTOs/
+│   ├── ApiKeyInfoDto.cs                # API Key info response
+│   ├── GenerateApiKeyRequest.cs        # Generate request
+│   └── GenerateApiKeyResponse.cs       # Generate response
 ├── Extensions/
 │   └── ApiKeyExtensions.cs             # AddApiKey() extension
 └── ApiKeyApiModule.cs
+```
+
+## API Key Management Endpoints
+
+> **Note:** These endpoints require administrator role.
+
+### Generate API Key
+
+```http
+POST /api/ApiKey/generate
+Content-Type: application/json
+
+{
+  "userOid": "00000000-0000-0000-0000-000000000000",
+  "expiration": "Days30",
+  "description": "My API Key"
+}
+```
+
+**Expiration Options:** `Minutes5`, `Minutes30`, `Day1`, `Days30`, `Days60`, `Days90`
+
+**Response:**
+```json
+{
+  "success": true,
+  "apiKey": "cak_...",
+  "expiresAt": "2025-01-20T00:00:00Z",
+  "message": "API Key generated successfully..."
+}
+```
+
+### Get API Key Info
+
+```http
+GET /api/ApiKey/{userOid}
+```
+
+**Response:**
+```json
+{
+  "userOid": "00000000-0000-0000-0000-000000000000",
+  "description": "My API Key",
+  "createdAt": "2024-12-20T00:00:00Z",
+  "expiresAt": "2025-01-20T00:00:00Z",
+  "lastUsedAt": null,
+  "isActive": true,
+  "isExpired": false,
+  "isValid": true
+}
+```
+
+### Revoke API Key
+
+```http
+DELETE /api/ApiKey/{userOid}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "API Key for user with Oid '...' has been revoked."
+}
 ```
 
 ## License
