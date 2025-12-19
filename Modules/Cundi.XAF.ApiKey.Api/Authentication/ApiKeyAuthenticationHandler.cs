@@ -1,11 +1,9 @@
 using Cundi.XAF.ApiKey.Services;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Security;
-using DevExpress.ExpressApp.Security.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
 using System.Text.Encodings.Web;
 
 namespace Cundi.XAF.ApiKey.Api.Authentication;
@@ -58,9 +56,9 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             // Create non-secured object space for validation
             using var objectSpace = objectSpaceFactory.CreateNonSecuredObjectSpace(typeof(BusinessObjects.ApiKeyInfo));
 
-            // Validate the API key
+            // Validate the API key (use read-only mode to avoid locking issues)
             var validator = new ApiKeyValidator();
-            var result = validator.Validate(objectSpace, providedApiKey);
+            var result = validator.ValidateReadOnly(objectSpace, providedApiKey);
 
             if (!result.IsValid)
             {

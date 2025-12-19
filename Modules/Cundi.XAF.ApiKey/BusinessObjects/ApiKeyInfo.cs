@@ -10,8 +10,6 @@ namespace Cundi.XAF.ApiKey.BusinessObjects;
 /// Stores API Key information for a user.
 /// The actual API Key is never stored - only its SHA256 hash.
 /// </summary>
-[DefaultClassOptions]
-[NavigationItem("Security")]
 [DefaultProperty(nameof(Description))]
 [ImageName("BO_Security")]
 public class ApiKeyInfo : BaseObject

@@ -17,4 +17,12 @@ public class TriggerDemo : BaseObject
     }
 
 
+    private string _Note;
+    public string Note
+    {
+        get { return _Note; }
+        set { SetPropertyValue<string>(nameof(Note), ref _Note, value); }
+    }
+
+
 }
