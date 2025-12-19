@@ -8,7 +8,7 @@ A DevExpress XAF Web API module that provides REST endpoints for receiving data 
 - **Batch Sync Endpoint**: `POST /api/Sync/batch` for processing multiple sync requests
 - **Health Check**: `GET /api/Sync/health` for monitoring API status
 - **Authentication**: Integrates with `Cundi.XAF.ApiKey.Api` for API Key authentication
-- **Type Mappings**: Support for mapping source types to local types via dependency injection
+- **Dynamic Type Mappings**: Type mappings are configured via XAF UI (no code changes needed)
 
 ## Installation
 
@@ -26,17 +26,13 @@ builder.Modules
     .Add<Cundi.XAF.SyncReceiver.Api.SyncReceiverApiModule>()
     .Add<Cundi.XAF.ApiKey.Api.ApiKeyApiModule>(); // For API Key authentication
 
-// Configure type mappings (required)
-services.AddSingleton<SyncTypeMappings>(sp =>
-{
-    var mappings = new SyncTypeMappings();
-    mappings.AddMapping<YourLocalType>("Source.Namespace.SourceType");
-    return mappings;
-});
-
-// Register SyncService as scoped
-services.AddScoped<SyncService>();
+// Register SyncReceiver services with a single call
+services.AddSyncReceiver();
 ```
+
+3. Configure type mappings in the XAF UI:
+   - Navigate to **Configuration > Sync Type Mapping Config**
+   - Add mappings between source type names and local types
 
 ## API Endpoints
 

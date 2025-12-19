@@ -1,5 +1,5 @@
 using Cundi.XAF.ApiKey.Api.Extensions;
-using Cundi.XAF.SyncReceiver.Services;
+using Cundi.XAF.SyncReceiver.Extensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
@@ -91,19 +91,9 @@ public class Startup
             });
         }, Configuration);
 
-        // Register SyncTypeMappings as singleton with type mappings configuration
-        services.AddSingleton<SyncTypeMappings>(sp =>
-        {
-            var mappings = new SyncTypeMappings();
-            // Map source system types to local types
-            // Source: Sample.Module.BusinessObjects.TriggerDemo -> Local: SyncedTriggerDemo
-            mappings.AddMapping<Receiver.Module.BusinessObjects.SyncedTriggerDemo>(
-                "Sample.Module.BusinessObjects.TriggerDemo");
-            return mappings;
-        });
-
-        // Register SyncService as scoped (needs IObjectSpaceFactory which is scoped)
-        services.AddScoped<SyncService>();
+        // Register SyncReceiver services (SyncTypeMappings and SyncService)
+        // Type mappings are configured via the SyncTypeMappingConfig entity in the XAF UI
+        services.AddSyncReceiver();
 
         services
             .AddControllers()

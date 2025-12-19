@@ -8,7 +8,7 @@ DevExpress XAF Web API 模組，提供 REST 端點來接收來自 `Cundi.XAF.Tri
 - **批次同步端點**：`POST /api/Sync/batch` 處理多個同步請求
 - **健康檢查**：`GET /api/Sync/health` 監控 API 狀態
 - **認證整合**：與 `Cundi.XAF.ApiKey.Api` 整合進行 API Key 認證
-- **型別映射**：支援透過依賴注入將來源型別映射至本地型別
+- **動態型別映射**：型別對應透過 XAF UI 設定（無需修改程式碼）
 
 ## 安裝
 
@@ -26,17 +26,13 @@ builder.Modules
     .Add<Cundi.XAF.SyncReceiver.Api.SyncReceiverApiModule>()
     .Add<Cundi.XAF.ApiKey.Api.ApiKeyApiModule>(); // API Key 認證
 
-// 設定型別映射（必要）
-services.AddSingleton<SyncTypeMappings>(sp =>
-{
-    var mappings = new SyncTypeMappings();
-    mappings.AddMapping<YourLocalType>("Source.Namespace.SourceType");
-    return mappings;
-});
-
-// 註冊 SyncService 為 scoped
-services.AddScoped<SyncService>();
+// 一行註冊所有 SyncReceiver 服務
+services.AddSyncReceiver();
 ```
+
+3. 在 XAF UI 中設定型別對應：
+   - 導航至 **Configuration > Sync Type Mapping Config**
+   - 新增來源型別名稱與本地型別的對應
 
 ## API 端點
 

@@ -1,6 +1,5 @@
 using Cundi.XAF.SyncReceiver.DTOs;
 using Cundi.XAF.SyncReceiver.Services;
-using DevExpress.ExpressApp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

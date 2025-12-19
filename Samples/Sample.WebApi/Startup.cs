@@ -1,5 +1,5 @@
 ﻿using Cundi.XAF.ApiKey.Api.Extensions;
-using Cundi.XAF.Triggers.Api;
+using Cundi.XAF.Triggers.Extensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
@@ -31,7 +31,8 @@ public class Startup
     {
         services.AddScoped<IAuthenticationTokenProvider, JwtTokenProviderService>();
 
-        services.AddScoped<IDataService, WebApiMiddleDataService>();
+        // Register Triggers services for WebApi
+        services.AddTriggers();
 
         services.AddXafWebApi(builder =>
         {

@@ -24,9 +24,10 @@
 
 2. 在 `Startup.cs` 中註冊：
    ```csharp
-   using Cundi.XAF.Triggers.Api;
+   using Cundi.XAF.Triggers.Extensions;
    
-   services.AddScoped<IDataService, WebApiMiddleDataService>();
+   // 註冊 Triggers 服務
+   services.AddTriggers();
    ```
 
 ## 運作方式

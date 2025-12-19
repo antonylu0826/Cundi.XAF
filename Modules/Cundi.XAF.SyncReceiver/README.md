@@ -5,8 +5,8 @@ A DevExpress XAF module for receiving and processing data synchronization from w
 ## Features
 
 - **SyncableObject Base Class**: Custom XPO base class that allows external Oid assignment for primary key synchronization
-- **Type Mappings**: Map source system type names to local types using `SyncTypeMappings`
-- **Read-Only Protection**: `SyncReadOnlyAttribute` and `SyncReadOnlyController` to prevent UI editing of synced objects
+- **Dynamic Type Mappings**: Configure source-to-local type mappings via XAF UI (SyncTypeMappingConfig), no code changes needed
+- **Automatic Read-Only Protection**: All `SyncableObject` derived classes are automatically read-only in the UI
 - **Auto-Hide New/Delete**: Automatically hides New and Delete buttons for all SyncableObject-derived classes
 - **Sync Service**: Processes incoming webhook payloads and applies Create/Modify/Delete operations
 - **Upsert Support**: Automatically creates objects on Modified events if they don't exist
@@ -33,15 +33,13 @@ Create a business object that inherits from `SyncableObject`:
 
 ```csharp
 using Cundi.XAF.SyncReceiver.BusinessObjects;
-using Cundi.XAF.SyncReceiver.Attributes;
 using DevExpress.Xpo;
 using DevExpress.Persistent.Base;
 
 namespace YourApp.Module.BusinessObjects;
 
 [DefaultClassOptions]
-[SyncReadOnly] // Mark as read-only, can only be modified by sync API
-public class SyncedCustomer : SyncableObject
+public class SyncedCustomer : SyncableObject  // Automatically read-only in UI
 {
     public SyncedCustomer(Session session) : base(session) { }
 
@@ -56,21 +54,24 @@ public class SyncedCustomer : SyncableObject
 
 ### Type Mappings
 
-When the source system uses different type names, configure mappings in your WebApi Startup:
+Type mappings are now configured dynamically via the XAF UI using `SyncTypeMappingConfig`:
+
+1. Navigate to **Configuration > Sync Type Mapping Config** in your XAF application
+2. Create a new mapping:
+   - **Source Type Name**: The full type name from the source system (e.g., `Sample.Module.BusinessObjects.TriggerDemo`)
+   - **Local Type**: Select from the dropdown showing all `SyncableObject` subclasses
+   - **Is Active**: Enable the mapping
+
+In your WebApi Startup.cs, simply register the services:
 
 ```csharp
-// Register SyncTypeMappings as singleton
-services.AddSingleton<SyncTypeMappings>(sp =>
-{
-    var mappings = new SyncTypeMappings();
-    // Map: Source.Module.Customer -> Local.Module.SyncedCustomer
-    mappings.AddMapping<SyncedCustomer>("Source.Module.BusinessObjects.Customer");
-    return mappings;
-});
+using Cundi.XAF.SyncReceiver.Extensions;
 
-// Register SyncService as scoped
-services.AddScoped<SyncService>();
+// Register SyncReceiver services with a single call
+services.AddSyncReceiver();
 ```
+
+> **Note**: The type dropdown only shows classes that inherit from `SyncableObject`.
 
 ### SyncableObject Properties
 
@@ -82,22 +83,9 @@ services.AddScoped<SyncService>();
 ### Automatic UI Protection
 
 All classes inheriting from `SyncableObject` automatically:
+- **Read-only in DetailView** (data can only be modified via sync API)
 - **Hide New button** in ListView (data can only be created via sync API)
 - **Hide Delete button** in both ListView and DetailView (prevents accidental deletion)
-
-### SyncReadOnlyAttribute
-
-Use this attribute to additionally prevent UI editing:
-
-```csharp
-// On class level - entire object is read-only
-[SyncReadOnly]
-public class SyncedCustomer : SyncableObject { }
-
-// Opt-out: Allow editing
-[SyncReadOnly(false)]
-public class EditableCustomer : SyncableObject { }
-```
 
 ## Webhook Payload Format
 
@@ -129,17 +117,18 @@ The module expects payloads in the format sent by `Cundi.XAF.Triggers`:
 
 ```
 Cundi.XAF.SyncReceiver/
-├── Attributes/
-│   └── SyncReadOnlyAttribute.cs    # Read-only marker attribute
 ├── BusinessObjects/
-│   └── SyncableObject.cs           # Base class for syncable objects
+│   ├── SyncableObject.cs           # Base class for syncable objects
+│   └── SyncTypeMappingConfig.cs    # Dynamic type mapping configuration
 ├── Controllers/
 │   └── SyncReadOnlyController.cs   # UI protection controllers
 ├── DTOs/
 │   └── SyncPayloadDto.cs           # Webhook payload structure
 ├── Services/
 │   ├── SyncService.cs              # Sync processing logic
-│   └── SyncTypeMappings.cs         # Type mapping configuration
+│   └── SyncTypeMappings.cs         # Type mapping service
+├── TypeConverters/
+│   └── SyncableTypeConverter.cs    # UI type selector for SyncableObject subclasses
 └── SyncReceiverModule.cs           # Module definition
 ```
 
@@ -148,6 +137,7 @@ Cundi.XAF.SyncReceiver/
 - DevExpress.ExpressApp
 - DevExpress.ExpressApp.Xpo
 - DevExpress.Persistent.Base
+- DevExpress.Persistent.BaseImpl.Xpo
 
 ## Related Modules
 

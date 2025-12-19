@@ -5,8 +5,8 @@ DevExpress XAF 資料同步接收模組，用於接收和處理來自 Webhook �
 ## 功能特色
 
 - **SyncableObject 基底類別**：自訂 XPO 基底類別，允許外部指定 Oid 以實現主鍵同步
-- **型別映射**：使用 `SyncTypeMappings` 將來源系統型別名稱映射至本地型別
-- **唯讀保護**：`SyncReadOnlyAttribute` 和 `SyncReadOnlyController` 防止在 UI 中編輯同步物件
+- **動態型別映射**：透過 XAF UI 設定來源到本地型別的對應關係（SyncTypeMappingConfig），無需修改程式碼
+- **自動唯讀保護**：所有繼承 `SyncableObject` 的類別自動在 UI 中唯讀
 - **自動隱藏 New/Delete**：自動隱藏所有繼承 SyncableObject 類別的新增和刪除按鈕
 - **同步服務**：處理傳入的 Webhook payload 並執行新增/修改/刪除操作
 - **Upsert 支援**：當 Modified 事件的物件不存在時，自動建立物件
@@ -33,15 +33,13 @@ RequiredModuleTypes.Add(typeof(Cundi.XAF.SyncReceiver.SyncReceiverModule));
 
 ```csharp
 using Cundi.XAF.SyncReceiver.BusinessObjects;
-using Cundi.XAF.SyncReceiver.Attributes;
 using DevExpress.Xpo;
 using DevExpress.Persistent.Base;
 
 namespace YourApp.Module.BusinessObjects;
 
 [DefaultClassOptions]
-[SyncReadOnly] // 標記為唯讀，只能透過同步 API 修改
-public class SyncedCustomer : SyncableObject
+public class SyncedCustomer : SyncableObject  // 在 UI 中自動唯讀
 {
     public SyncedCustomer(Session session) : base(session) { }
 
@@ -56,21 +54,24 @@ public class SyncedCustomer : SyncableObject
 
 ### 型別映射
 
-當來源系統使用不同的型別名稱時，在 WebApi Startup 中設定映射：
+型別映射現在透過 XAF UI 使用 `SyncTypeMappingConfig` 動態設定：
+
+1. 在您的 XAF 應用程式中導航至 **Configuration > Sync Type Mapping Config**
+2. 建立新的映射：
+   - **Source Type Name**：來源系統的完整型別名稱（例如：`Sample.Module.BusinessObjects.TriggerDemo`）
+   - **Local Type**：從下拉選單選擇所有 `SyncableObject` 子類別
+   - **Is Active**：啟用對應
+
+在您的 WebApi Startup.cs 中，只需註冊服務：
 
 ```csharp
-// 註冊 SyncTypeMappings 為 singleton
-services.AddSingleton<SyncTypeMappings>(sp =>
-{
-    var mappings = new SyncTypeMappings();
-    // 映射：Source.Module.Customer -> Local.Module.SyncedCustomer
-    mappings.AddMapping<SyncedCustomer>("Source.Module.BusinessObjects.Customer");
-    return mappings;
-});
+using Cundi.XAF.SyncReceiver.Extensions;
 
-// 註冊 SyncService 為 scoped
-services.AddScoped<SyncService>();
+// 一行註冊所有 SyncReceiver 服務
+services.AddSyncReceiver();
 ```
+
+> **說明**：型別下拉選單只會顯示繼承自 `SyncableObject` 的類別。
 
 ### SyncableObject 屬性
 
@@ -82,22 +83,9 @@ services.AddScoped<SyncService>();
 ### 自動 UI 保護
 
 所有繼承 `SyncableObject` 的類別會自動：
+- **DetailView 唯讀** - 資料只能透過同步 API 修改
 - **隱藏 New 按鈕** - ListView 中無法新建（資料只能透過同步 API 建立）
 - **隱藏 Delete 按鈕** - ListView 和 DetailView 中都無法刪除（防止意外刪除同步資料）
-
-### SyncReadOnlyAttribute
-
-使用此 Attribute 額外防止 UI 編輯：
-
-```csharp
-// 類別層級 - 整個物件唯讀
-[SyncReadOnly]
-public class SyncedCustomer : SyncableObject { }
-
-// 允許編輯的例外情況
-[SyncReadOnly(false)]
-public class EditableCustomer : SyncableObject { }
-```
 
 ## Webhook Payload 格式
 
@@ -129,17 +117,18 @@ public class EditableCustomer : SyncableObject { }
 
 ```
 Cundi.XAF.SyncReceiver/
-├── Attributes/
-│   └── SyncReadOnlyAttribute.cs    # 唯讀標記 Attribute
 ├── BusinessObjects/
-│   └── SyncableObject.cs           # 可同步物件基底類別
+│   ├── SyncableObject.cs           # 可同步物件基底類別
+│   └── SyncTypeMappingConfig.cs    # 動態型別映射設定
 ├── Controllers/
 │   └── SyncReadOnlyController.cs   # UI 保護控制器
 ├── DTOs/
 │   └── SyncPayloadDto.cs           # Webhook payload 結構
 ├── Services/
 │   ├── SyncService.cs              # 同步處理邏輯
-│   └── SyncTypeMappings.cs         # 型別映射設定
+│   └── SyncTypeMappings.cs         # 型別映射服務
+├── TypeConverters/
+│   └── SyncableTypeConverter.cs    # UI 型別選擇器
 └── SyncReceiverModule.cs           # 模組定義
 ```
 
@@ -148,6 +137,7 @@ Cundi.XAF.SyncReceiver/
 - DevExpress.ExpressApp
 - DevExpress.ExpressApp.Xpo
 - DevExpress.Persistent.Base
+- DevExpress.Persistent.BaseImpl.Xpo
 
 ## 相關模組
 

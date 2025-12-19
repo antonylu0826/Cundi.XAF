@@ -1,36 +1,121 @@
+using Cundi.XAF.SyncReceiver.BusinessObjects;
+using DevExpress.ExpressApp;
+
 namespace Cundi.XAF.SyncReceiver.Services;
 
 /// <summary>
 /// Configuration for type mappings in the sync receiver.
 /// Maps source system type names to local types.
+/// Supports both database configuration and code-based registration.
 /// </summary>
 public class SyncTypeMappings
 {
-    private readonly Dictionary<string, Type> _mappings = new();
+    private readonly Dictionary<string, Type> _codeMappings = new();
+    private readonly INonSecuredObjectSpaceFactory? _objectSpaceFactory;
 
     /// <summary>
-    /// Adds a type mapping from a source type name to a local type.
+    /// Creates a new instance for code-based registration only.
+    /// </summary>
+    public SyncTypeMappings()
+    {
+    }
+
+    /// <summary>
+    /// Creates a new instance with database support.
+    /// </summary>
+    public SyncTypeMappings(INonSecuredObjectSpaceFactory objectSpaceFactory)
+    {
+        _objectSpaceFactory = objectSpaceFactory;
+    }
+
+    /// <summary>
+    /// Adds a type mapping from a source type name to a local type (code-based).
+    /// This is a fallback when database configuration is not available.
     /// </summary>
     /// <param name="sourceTypeName">The full type name from the source system</param>
     /// <param name="localType">The local type to map to</param>
     public void AddMapping(string sourceTypeName, Type localType)
     {
-        _mappings[sourceTypeName] = localType;
+        _codeMappings[sourceTypeName] = localType;
     }
 
     /// <summary>
-    /// Adds a type mapping from a source type name to a local type.
+    /// Adds a type mapping from a source type name to a local type (code-based).
     /// </summary>
     public void AddMapping<TLocal>(string sourceTypeName)
     {
-        _mappings[sourceTypeName] = typeof(TLocal);
+        _codeMappings[sourceTypeName] = typeof(TLocal);
     }
 
     /// <summary>
     /// Tries to get the mapped type for a source type name.
+    /// Priority: Database configuration > Code-based registration
     /// </summary>
     public bool TryGetMappedType(string sourceTypeName, out Type? mappedType)
     {
-        return _mappings.TryGetValue(sourceTypeName, out mappedType);
+        // First, try database configuration
+        if (_objectSpaceFactory != null)
+        {
+            try
+            {
+                using var objectSpace = _objectSpaceFactory.CreateNonSecuredObjectSpace(typeof(SyncTypeMappingConfig));
+                var config = objectSpace.FindObject<SyncTypeMappingConfig>(
+                    DevExpress.Data.Filtering.CriteriaOperator.Parse(
+                        "SourceTypeName = ? AND IsActive = True", sourceTypeName));
+
+                if (config != null && !string.IsNullOrEmpty(config.LocalTypeName))
+                {
+                    mappedType = XafTypesInfo.Instance.FindTypeInfo(config.LocalTypeName)?.Type;
+                    if (mappedType != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                // Fall back to code-based mappings if database access fails
+            }
+        }
+
+        // Fall back to code-based mappings
+        return _codeMappings.TryGetValue(sourceTypeName, out mappedType);
+    }
+
+    /// <summary>
+    /// Gets all configured mappings from both database and code.
+    /// </summary>
+    public IEnumerable<(string SourceTypeName, Type LocalType)> GetAllMappings()
+    {
+        var mappings = new Dictionary<string, Type>(_codeMappings);
+
+        // Add database mappings (override code-based if same key)
+        if (_objectSpaceFactory != null)
+        {
+            try
+            {
+                using var objectSpace = _objectSpaceFactory.CreateNonSecuredObjectSpace(typeof(SyncTypeMappingConfig));
+                var configs = objectSpace.GetObjects<SyncTypeMappingConfig>(
+                    DevExpress.Data.Filtering.CriteriaOperator.Parse("IsActive = True"));
+
+                foreach (var config in configs)
+                {
+                    if (!string.IsNullOrEmpty(config.LocalTypeName))
+                    {
+                        var type = XafTypesInfo.Instance.FindTypeInfo(config.LocalTypeName)?.Type;
+                        if (type != null)
+                        {
+                            mappings[config.SourceTypeName] = type;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore database errors
+            }
+        }
+
+        return mappings.Select(kv => (kv.Key, kv.Value));
     }
 }

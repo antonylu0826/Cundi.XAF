@@ -24,9 +24,10 @@ This module provides `WebApiMiddleDataService` - a custom `IDataService` impleme
 
 2. Register in `Startup.cs`:
    ```csharp
-   using Cundi.XAF.Triggers.Api;
+   using Cundi.XAF.Triggers.Extensions;
    
-   services.AddScoped<IDataService, WebApiMiddleDataService>();
+   // Register Triggers services for WebApi
+   services.AddTriggers();
    ```
 
 ## How It Works
