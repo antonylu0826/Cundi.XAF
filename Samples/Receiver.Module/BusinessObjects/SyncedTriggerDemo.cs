@@ -16,12 +16,12 @@ public class SyncedTriggerDemo : SyncableObject
 {
     public SyncedTriggerDemo(Session session) : base(session) { }
 
-    private string? _name;
+    private string _name;
     /// <summary>
     /// The name of the demo object, synchronized from the source system.
     /// </summary>
     [Size(200)]
-    public string? Name
+    public string Name
     {
         get => _name;
         set => SetPropertyValue(nameof(Name), ref _name, value);

@@ -29,18 +29,18 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
         _serviceProvider = serviceProvider;
     }
 
-    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         // Check for API key header
         if (!Request.Headers.TryGetValue(HeaderName, out var apiKeyHeaderValues))
         {
-            return AuthenticateResult.NoResult();
+            return Task.FromResult(AuthenticateResult.NoResult());
         }
 
         var providedApiKey = apiKeyHeaderValues.FirstOrDefault();
         if (string.IsNullOrWhiteSpace(providedApiKey))
         {
-            return AuthenticateResult.NoResult();
+            return Task.FromResult(AuthenticateResult.NoResult());
         }
 
         try
@@ -50,7 +50,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             if (objectSpaceFactory == null)
             {
                 Logger.LogError("INonSecuredObjectSpaceFactory not available for API Key authentication.");
-                return AuthenticateResult.Fail("Authentication service unavailable.");
+                return Task.FromResult(AuthenticateResult.Fail("Authentication service unavailable."));
             }
 
             // Create non-secured object space for validation
@@ -63,7 +63,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             if (!result.IsValid)
             {
                 Logger.LogWarning("API Key authentication failed: {Error}", result.ErrorMessage);
-                return AuthenticateResult.Fail(result.ErrorMessage ?? "Invalid API key.");
+                return Task.FromResult(AuthenticateResult.Fail(result.ErrorMessage ?? "Invalid API key."));
             }
 
             // Get SignInManager to authenticate with XAF Security System
@@ -71,7 +71,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             if (signInManager == null)
             {
                 Logger.LogError("SignInManager not available for API Key authentication.");
-                return AuthenticateResult.Fail("SignInManager unavailable.");
+                return Task.FromResult(AuthenticateResult.Fail("SignInManager unavailable."));
             }
 
             // Get the security system
@@ -79,7 +79,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             if (securitySystem == null)
             {
                 Logger.LogError("ISecurityStrategyBase not available for API Key authentication.");
-                return AuthenticateResult.Fail("Security system unavailable.");
+                return Task.FromResult(AuthenticateResult.Fail("Security system unavailable."));
             }
 
             // Find the user by Oid
@@ -88,7 +88,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             if (user == null)
             {
                 Logger.LogWarning("User with Oid {UserOid} not found for API Key.", userOid);
-                return AuthenticateResult.Fail("User not found.");
+                return Task.FromResult(AuthenticateResult.Fail("User not found."));
             }
 
             // Get username from user
@@ -103,7 +103,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             {
                 var errorMessage = authResult.Error?.Message ?? "Authentication failed.";
                 Logger.LogWarning("XAF authentication failed for user {UserName}: {Error}", userName, errorMessage);
-                return AuthenticateResult.Fail($"Login failed for '{userName}'.");
+                return Task.FromResult(AuthenticateResult.Fail($"Login failed for '{userName}'."));
             }
 
             // Use the claims from XAF SignInManager result
@@ -111,12 +111,12 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             var ticket = new AuthenticationTicket(principal, SchemeName);
 
             Logger.LogInformation("API Key authentication successful for user {UserName}.", userName);
-            return AuthenticateResult.Success(ticket);
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error during API Key authentication.");
-            return AuthenticateResult.Fail("Authentication error.");
+            return Task.FromResult(AuthenticateResult.Fail("Authentication error."));
         }
     }
 }

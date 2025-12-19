@@ -40,7 +40,7 @@ public class Startup
             builder.ObjectSpaceProviders
                 .AddSecuredXpo((serviceProvider, options) =>
                 {
-                    string? connectionString = Configuration.GetConnectionString("ConnectionString");
+                    string connectionString = Configuration.GetConnectionString("ConnectionString");
                     ArgumentNullException.ThrowIfNull(connectionString);
                     options.ConnectionString = connectionString;
                     options.ThreadSafe = true;
