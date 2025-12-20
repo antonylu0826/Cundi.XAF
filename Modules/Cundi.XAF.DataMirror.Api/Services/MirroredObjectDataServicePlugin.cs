@@ -1,39 +1,28 @@
 #nullable enable
+using Cundi.XAF.Core.Api;
 using Cundi.XAF.DataMirror.BusinessObjects;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.DC;
-using DevExpress.ExpressApp.WebApi.Services;
 
 namespace Cundi.XAF.DataMirror.Api.Services;
 
 /// <summary>
-/// Custom DataService that prevents Create/Update/Delete operations on MirroredObject-derived types.
+/// DataService plugin that prevents Create/Update/Delete operations on MirroredObject-derived types.
 /// MirroredObject types are read-only in the API - they can only be modified via the Mirror API endpoint.
 /// </summary>
-public class MirroredObjectDataService : DataService
+public class MirroredObjectDataServicePlugin : IDataServicePlugin
 {
-    public MirroredObjectDataService(
-        IObjectSpaceFactory objectSpaceFactory,
-        ITypesInfo typesInfo) : base(objectSpaceFactory, typesInfo)
-    {
-    }
-
     /// <summary>
-    /// Intercepts ObjectSpace creation to track object changes.
-    /// We subscribe to Committing event to block modifications on MirroredObject types.
+    /// High priority (runs first) to block invalid operations early
     /// </summary>
-    protected override IObjectSpace CreateObjectSpace(Type objectType)
+    public int Order => 0;
+
+    public void OnObjectSpaceCreated(IObjectSpace objectSpace, Type objectType)
     {
-        // Check if the object type is a MirroredObject-derived type
+        // Only subscribe to MirroredObject-derived types
         if (typeof(MirroredObject).IsAssignableFrom(objectType))
         {
-            // Subscribe to Committing event to intercept and block modifications
-            var os = base.CreateObjectSpace(objectType);
-            os.Committing += Os_Committing;
-            return os;
+            objectSpace.Committing += Os_Committing;
         }
-
-        return base.CreateObjectSpace(objectType);
     }
 
     /// <summary>

@@ -4,11 +4,12 @@ WebApi integration module for [Cundi.XAF.Triggers](../Cundi.XAF.Triggers/README.
 
 ## Overview
 
-This module provides `WebApiMiddleDataService` - a custom `IDataService` implementation that enables trigger processing in ASP.NET Core WebApi applications.
+This module provides `TriggerDataServicePlugin` - a DataService plugin that enables trigger processing in ASP.NET Core WebApi applications. It uses the extensible DataService architecture from [Cundi.XAF.Core.Api](../Cundi.XAF.Core.Api/README.md).
 
 ## Features
 
-- **Sync Execution**: Webhook calls are executed synchronously within the request lifecycle
+- **Plugin Architecture**: Integrates with `CompositeDataService` for extensibility
+- **Sync Execution**: Webhook calls are executed synchronously within the request lifecycle  
 - **Full Response Logging**: Complete HTTP response details are captured in TriggerLog
 - **Scoped State Management**: Thread-safe trigger state handling for concurrent requests
 
@@ -17,6 +18,7 @@ This module provides `WebApiMiddleDataService` - a custom `IDataService` impleme
 1. Add project references:
    ```xml
    <ItemGroup>
+     <ProjectReference Include="..\Modules\Cundi.XAF.Core.Api\Cundi.XAF.Core.Api.csproj" />
      <ProjectReference Include="..\Modules\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />
      <ProjectReference Include="..\Modules\Cundi.XAF.Triggers.Api\Cundi.XAF.Triggers.Api.csproj" />
    </ItemGroup>
@@ -25,19 +27,25 @@ This module provides `WebApiMiddleDataService` - a custom `IDataService` impleme
 2. Register in `Startup.cs`:
    ```csharp
    using Cundi.XAF.Triggers.Extensions;
+   using Cundi.XAF.Core.Api.Extensions;
    
-   // Register Triggers services for WebApi
+   // Register Triggers plugin
    services.AddTriggers();
+   
+   // Register CompositeDataService (MUST be called after all plugins)
+   services.AddCompositeDataService();
    ```
 
 ## How It Works
 
 ```
-API Request → WebApiMiddleDataService.CreateObjectSpace()
+API Request → CompositeDataService.CreateObjectSpace()
+                           ↓
+              TriggerDataServicePlugin.OnObjectSpaceCreated()
                            ↓
               ObjectSpace.Committing Event
+              - Validate objects
               - Capture object states
-              - Store in instance field (scoped)
                            ↓
               ObjectSpace.Committed Event
               - Execute webhooks (sync)
@@ -50,6 +58,7 @@ API Request → WebApiMiddleDataService.CreateObjectSpace()
 
 - .NET 8.0+
 - DevExpress XAF WebApi 24.2+
+- Cundi.XAF.Core.Api module
 - Cundi.XAF.Triggers module
 
 ## License

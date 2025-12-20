@@ -24,6 +24,8 @@ public sealed class ReceiverModule : ModuleBase
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ConditionalAppearance.ConditionalAppearanceModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
 
+        RequiredModuleTypes.Add(typeof(Cundi.XAF.Triggers.TriggersModule));
+
         // Data Mirror module
         RequiredModuleTypes.Add(typeof(Cundi.XAF.DataMirror.DataMirrorModule));
 

@@ -14,6 +14,7 @@
 1. 在 WebApi 專案中加入專案參考：
 
 ```xml
+<ProjectReference Include="path\to\Cundi.XAF.Core.Api\Cundi.XAF.Core.Api.csproj" />
 <ProjectReference Include="path\to\Cundi.XAF.DataMirror.Api\Cundi.XAF.DataMirror.Api.csproj" />
 ```
 
@@ -21,13 +22,17 @@
 
 ```csharp
 using Cundi.XAF.DataMirror.Extensions;
+using Cundi.XAF.Core.Api.Extensions;
 
 // 在 ConfigureServices 方法中
 builder.Modules
     .Add<Cundi.XAF.DataMirror.Api.DataMirrorApiModule>();
 
-// 註冊 DataMirror 服務
+// 註冊 DataMirror 服務（包含 MirroredObjectDataServicePlugin）
 services.AddDataMirror();
+
+// 註冊 CompositeDataService（必須在所有插件之後呼叫）
+services.AddCompositeDataService();
 ```
 
 ## API 端點

@@ -14,6 +14,7 @@ API module for receiving webhook requests from the `Cundi.XAF.Triggers` module. 
 1. Add project reference to your WebApi project:
 
 ```xml
+<ProjectReference Include="path\to\Cundi.XAF.Core.Api\Cundi.XAF.Core.Api.csproj" />
 <ProjectReference Include="path\to\Cundi.XAF.DataMirror.Api\Cundi.XAF.DataMirror.Api.csproj" />
 ```
 
@@ -21,13 +22,17 @@ API module for receiving webhook requests from the `Cundi.XAF.Triggers` module. 
 
 ```csharp
 using Cundi.XAF.DataMirror.Extensions;
+using Cundi.XAF.Core.Api.Extensions;
 
 // In ConfigureServices method
 builder.Modules
     .Add<Cundi.XAF.DataMirror.Api.DataMirrorApiModule>();
 
-// Register DataMirror services
+// Register DataMirror services (includes MirroredObjectDataServicePlugin)
 services.AddDataMirror();
+
+// Register CompositeDataService (MUST be called after all plugins)
+services.AddCompositeDataService();
 ```
 
 ## API Endpoints

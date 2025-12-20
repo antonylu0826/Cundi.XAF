@@ -32,5 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\Cundi.XAF.ApiKey\Cundi.XAF.ApiKey.csproj" />
     <ProjectReference Include="..\..\Modules\Cundi.XAF.DataMirror\Cundi.XAF.DataMirror.csproj" />
+    <ProjectReference Include="..\..\Modules\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />
   </ItemGroup>
 </Project>

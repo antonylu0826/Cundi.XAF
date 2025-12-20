@@ -1,5 +1,7 @@
 using Cundi.XAF.ApiKey.Api.Extensions;
+using Cundi.XAF.Core.Api.Extensions;
 using Cundi.XAF.DataMirror.Extensions;
+using Cundi.XAF.Triggers.Extensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
@@ -42,6 +44,7 @@ public class Startup
             builder.Modules
                 .AddValidation()
                 .Add<Receiver.Module.ReceiverModule>()
+                .Add<Cundi.XAF.Triggers.Api.TriggersApiModule>()
                 .Add<Cundi.XAF.ApiKey.Api.ApiKeyApiModule>()
                 .Add<Cundi.XAF.DataMirror.Api.DataMirrorApiModule>(); // Add DataMirror API module
 
@@ -91,9 +94,16 @@ public class Startup
             });
         }, Configuration);
 
+        // Register Triggers services
+        services.AddTriggers();
+
         // Register DataMirror services (MirrorTypeMappings and MirrorService)
         // Type mappings are configured via the MirrorTypeMappingConfig entity in the XAF UI
         services.AddDataMirror();
+
+        // Register the CompositeDataService which delegates to all registered plugins
+        // This must be called AFTER registering all module-specific plugins (AddTriggers, AddDataMirror, etc.)
+        services.AddCompositeDataService();
 
         services
             .AddControllers()

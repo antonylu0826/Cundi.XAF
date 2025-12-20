@@ -1,5 +1,6 @@
+using Cundi.XAF.Core.Api;
+using Cundi.XAF.Core.Api.Extensions;
 using Cundi.XAF.Triggers.Api;
-using DevExpress.ExpressApp.WebApi.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Cundi.XAF.Triggers.Extensions;
@@ -11,16 +12,16 @@ public static class TriggersExtensions
 {
     /// <summary>
     /// Adds Triggers services to the service collection for WebApi.
-    /// This replaces the default IDataService with WebApiMiddleDataService
-    /// to enable trigger processing on object changes.
+    /// This registers the TriggerDataServicePlugin to enable trigger processing on object changes.
+    /// Note: You must also call AddCompositeDataService() after registering all plugins.
     /// </summary>
     /// <param name="services">The service collection</param>
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddTriggers(this IServiceCollection services)
     {
-        // Replace the default DataService with WebApiMiddleDataService
+        // Register the Trigger plugin
         // This intercepts ObjectSpace commit events to detect changes and invoke webhooks
-        services.AddScoped<IDataService, WebApiMiddleDataService>();
+        services.AddDataServicePlugin<TriggerDataServicePlugin>();
 
         return services;
     }
