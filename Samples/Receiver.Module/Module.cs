@@ -24,8 +24,8 @@ public sealed class ReceiverModule : ModuleBase
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ConditionalAppearance.ConditionalAppearanceModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
 
-        // Sync Receiver module
-        RequiredModuleTypes.Add(typeof(Cundi.XAF.SyncReceiver.SyncReceiverModule));
+        // Data Mirror module
+        RequiredModuleTypes.Add(typeof(Cundi.XAF.DataMirror.DataMirrorModule));
 
         // API Key module
         RequiredModuleTypes.Add(typeof(Cundi.XAF.ApiKey.ApiKeyModule));

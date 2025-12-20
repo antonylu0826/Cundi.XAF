@@ -5,8 +5,9 @@ using DevExpress.Persistent.BaseImpl;
 using DevExpress.Persistent.Validation;
 using DevExpress.Xpo;
 using System.ComponentModel;
+using Cundi.XAF.DataMirror.TypeConverters;
 
-namespace Cundi.XAF.SyncReceiver.BusinessObjects;
+namespace Cundi.XAF.DataMirror.BusinessObjects;
 
 /// <summary>
 /// Configuration for mapping source system type names to local types.
@@ -15,9 +16,9 @@ namespace Cundi.XAF.SyncReceiver.BusinessObjects;
 [ImageName("BO_Transition")]
 [DefaultClassOptions]
 [NavigationItem("Configuration")]
-public class SyncTypeMappingConfig : BaseObject
+public class MirrorTypeMappingConfig : BaseObject
 {
-    public SyncTypeMappingConfig(Session session) : base(session) { }
+    public MirrorTypeMappingConfig(Session session) : base(session) { }
 
     public override void AfterConstruction()
     {
@@ -65,12 +66,12 @@ public class SyncTypeMappingConfig : BaseObject
     private Type? _localType;
     /// <summary>
     /// The local type to map to (UI display only).
-    /// Uses SyncableTypeConverter to show only SyncableObject subclasses.
+    /// Uses MirroredTypeConverter to show only MirroredObject subclasses.
     /// </summary>
     [NonPersistent]
     [ImmediatePostData]
     [RuleRequiredField]
-    [TypeConverter(typeof(SyncableTypeConverter))]
+    [TypeConverter(typeof(MirroredTypeConverter))]
     [ModelDefault("Caption", "Local Type")]
     public Type? LocalType
     {

@@ -31,6 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\Cundi.XAF.ApiKey\Cundi.XAF.ApiKey.csproj" />
-    <ProjectReference Include="..\..\Modules\Cundi.XAF.SyncReceiver\Cundi.XAF.SyncReceiver.csproj" />
+    <ProjectReference Include="..\..\Modules\Cundi.XAF.DataMirror\Cundi.XAF.DataMirror.csproj" />
   </ItemGroup>
 </Project>

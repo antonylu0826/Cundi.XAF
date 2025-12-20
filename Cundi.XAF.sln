@@ -31,9 +31,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cundi.XAF.ApiKey", "Modules
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cundi.XAF.ApiKey.Api", "Modules\Cundi.XAF.ApiKey.Api\Cundi.XAF.ApiKey.Api.csproj", "{A5583D03-EF9F-4E87-8185-9D39F924A0B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cundi.XAF.SyncReceiver", "Modules\Cundi.XAF.SyncReceiver\Cundi.XAF.SyncReceiver.csproj", "{187DE0A4-D1E0-4F68-8221-F76896698904}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cundi.XAF.DataMirror", "Modules\Cundi.XAF.DataMirror\Cundi.XAF.DataMirror.csproj", "{187DE0A4-D1E0-4F68-8221-F76896698904}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cundi.XAF.SyncReceiver.Api", "Modules\Cundi.XAF.SyncReceiver.Api\Cundi.XAF.SyncReceiver.Api.csproj", "{F67CC368-B7C9-4707-B5CF-EC72D2136AB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cundi.XAF.DataMirror.Api", "Modules\Cundi.XAF.DataMirror.Api\Cundi.XAF.DataMirror.Api.csproj", "{F67CC368-B7C9-4707-B5CF-EC72D2136AB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Receiver.Module", "Samples\Receiver.Module\Receiver.Module.csproj", "{E2DBA009-7E13-419E-B0F5-CB761A416A44}"
 EndProject

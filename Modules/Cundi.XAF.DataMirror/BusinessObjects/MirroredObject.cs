@@ -1,19 +1,19 @@
 using DevExpress.Persistent.Base;
 using DevExpress.Xpo;
 
-namespace Cundi.XAF.SyncReceiver.BusinessObjects;
+namespace Cundi.XAF.DataMirror.BusinessObjects;
 
 /// <summary>
-/// Abstract base class for syncable objects.
+/// Abstract base class for mirrored objects.
 /// Objects inheriting from this class can be created, modified, and deleted
-/// through the sync API, with the ability to specify the Oid externally
+/// through the mirror API, with the ability to specify the Oid externally
 /// to maintain primary key synchronization with the source system.
 /// </summary>
 [NonPersistent]
 [CreatableItem(false)]
-public abstract class SyncableObject : XPCustomObject
+public abstract class MirroredObject : XPCustomObject
 {
-    public SyncableObject(Session session) : base(session) { }
+    public MirroredObject(Session session) : base(session) { }
 
     private Guid _oid = Guid.Empty;
 
@@ -33,7 +33,7 @@ public abstract class SyncableObject : XPCustomObject
     private DateTime? _syncedAt;
 
     /// <summary>
-    /// The timestamp when the object was last synchronized from the source system.
+    /// The timestamp when the object was last mirrored from the source system.
     /// </summary>
     [VisibleInListView(false)]
     [VisibleInDetailView(true)]

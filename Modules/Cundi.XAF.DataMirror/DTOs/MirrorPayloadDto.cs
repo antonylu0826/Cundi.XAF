@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 
-namespace Cundi.XAF.SyncReceiver.DTOs;
+namespace Cundi.XAF.DataMirror.DTOs;
 
 /// <summary>
-/// Data structure for sync webhook payload.
+/// Data structure for mirror webhook payload.
 /// Corresponds to the format sent by Cundi.XAF.Triggers module.
 /// </summary>
-public class SyncPayloadDto
+public class MirrorPayloadDto
 {
     /// <summary>
     /// Event type: Created, Modified, Deleted
@@ -46,9 +46,9 @@ public class SyncPayloadDto
 }
 
 /// <summary>
-/// Sync event type enumeration
+/// Mirror event type enumeration
 /// </summary>
-public enum SyncEventType
+public enum MirrorEventType
 {
     /// <summary>
     /// Object was created

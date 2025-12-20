@@ -1,14 +1,14 @@
-using Cundi.XAF.SyncReceiver.BusinessObjects;
+using Cundi.XAF.DataMirror.BusinessObjects;
 using DevExpress.ExpressApp;
 
-namespace Cundi.XAF.SyncReceiver.Services;
+namespace Cundi.XAF.DataMirror.Services;
 
 /// <summary>
-/// Configuration for type mappings in the sync receiver.
+/// Configuration for type mappings in the data mirror.
 /// Maps source system type names to local types.
 /// Supports both database configuration and code-based registration.
 /// </summary>
-public class SyncTypeMappings
+public class MirrorTypeMappings
 {
     private readonly Dictionary<string, Type> _codeMappings = new();
     private readonly INonSecuredObjectSpaceFactory? _objectSpaceFactory;
@@ -16,14 +16,14 @@ public class SyncTypeMappings
     /// <summary>
     /// Creates a new instance for code-based registration only.
     /// </summary>
-    public SyncTypeMappings()
+    public MirrorTypeMappings()
     {
     }
 
     /// <summary>
     /// Creates a new instance with database support.
     /// </summary>
-    public SyncTypeMappings(INonSecuredObjectSpaceFactory objectSpaceFactory)
+    public MirrorTypeMappings(INonSecuredObjectSpaceFactory objectSpaceFactory)
     {
         _objectSpaceFactory = objectSpaceFactory;
     }
@@ -58,8 +58,8 @@ public class SyncTypeMappings
         {
             try
             {
-                using var objectSpace = _objectSpaceFactory.CreateNonSecuredObjectSpace(typeof(SyncTypeMappingConfig));
-                var config = objectSpace.FindObject<SyncTypeMappingConfig>(
+                using var objectSpace = _objectSpaceFactory.CreateNonSecuredObjectSpace(typeof(MirrorTypeMappingConfig));
+                var config = objectSpace.FindObject<MirrorTypeMappingConfig>(
                     DevExpress.Data.Filtering.CriteriaOperator.Parse(
                         "SourceTypeName = ? AND IsActive = True", sourceTypeName));
 
@@ -94,8 +94,8 @@ public class SyncTypeMappings
         {
             try
             {
-                using var objectSpace = _objectSpaceFactory.CreateNonSecuredObjectSpace(typeof(SyncTypeMappingConfig));
-                var configs = objectSpace.GetObjects<SyncTypeMappingConfig>(
+                using var objectSpace = _objectSpaceFactory.CreateNonSecuredObjectSpace(typeof(MirrorTypeMappingConfig));
+                var configs = objectSpace.GetObjects<MirrorTypeMappingConfig>(
                     DevExpress.Data.Filtering.CriteriaOperator.Parse("IsActive = True"));
 
                 foreach (var config in configs)

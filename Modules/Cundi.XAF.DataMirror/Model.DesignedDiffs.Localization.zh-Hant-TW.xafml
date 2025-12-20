@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Application>
   <BOModel>
-    <Class Name="Cundi.XAF.SyncReceiver.BusinessObjects.SyncableObject" Caption="可同步物件">
+    <Class Name="Cundi.XAF.DataMirror.BusinessObjects.MirroredObject" Caption="鏡像物件">
       <OwnMembers>
         <Member Name="Oid" Caption="ID" />
         <Member Name="SyncedAt" Caption="同步時間" />
       </OwnMembers>
     </Class>
-    <Class Name="Cundi.XAF.SyncReceiver.BusinessObjects.SyncTypeMappingConfig" Caption="同步類型對應">
+    <Class Name="Cundi.XAF.DataMirror.BusinessObjects.MirrorTypeMappingConfig" Caption="鏡像類型對應">
       <OwnMembers>
         <Member Name="Description" Caption="說明" />
         <Member Name="IsActive" Caption="啟用" />

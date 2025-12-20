@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Application>
   <BOModel>
-    <Class Name="Cundi.XAF.SyncReceiver.BusinessObjects.SyncableObject" Caption="Syncable Object">
+    <Class Name="Cundi.XAF.DataMirror.BusinessObjects.MirroredObject" Caption="Mirrored Object">
       <OwnMembers>
         <Member Name="Oid" Caption="ID" />
         <Member Name="SyncedAt" Caption="Synced At" />
       </OwnMembers>
     </Class>
-    <Class Name="Cundi.XAF.SyncReceiver.BusinessObjects.SyncTypeMappingConfig" Caption="Sync Type Mapping">
+    <Class Name="Cundi.XAF.DataMirror.BusinessObjects.MirrorTypeMappingConfig" Caption="Mirror Type Mapping">
       <OwnMembers>
         <Member Name="Description" Caption="Description" />
         <Member Name="IsActive" Caption="Is Active" />

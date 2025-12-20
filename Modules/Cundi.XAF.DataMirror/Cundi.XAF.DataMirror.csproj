@@ -26,5 +26,6 @@
 		<PackageReference Include="DevExpress.ExpressApp.Xpo" Version="24.2.13-pre-25341" />
 		<PackageReference Include="DevExpress.Persistent.Base" Version="24.2.13-pre-25341" />
 		<PackageReference Include="DevExpress.Persistent.BaseImpl.Xpo" Version="24.2.13-pre-25341" />
+		<PackageReference Include="DevExpress.ExpressApp.Security" Version="24.2.13-pre-25341" />
 	</ItemGroup>
 </Project>

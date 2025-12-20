@@ -1,5 +1,5 @@
 using Cundi.XAF.ApiKey.Api.Extensions;
-using Cundi.XAF.SyncReceiver.Extensions;
+using Cundi.XAF.DataMirror.Extensions;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.ApplicationBuilder;
 using DevExpress.ExpressApp.Security;
@@ -43,7 +43,7 @@ public class Startup
                 .AddValidation()
                 .Add<Receiver.Module.ReceiverModule>()
                 .Add<Cundi.XAF.ApiKey.Api.ApiKeyApiModule>()
-                .Add<Cundi.XAF.SyncReceiver.Api.SyncReceiverApiModule>(); // Add SyncReceiver API module
+                .Add<Cundi.XAF.DataMirror.Api.DataMirrorApiModule>(); // Add DataMirror API module
 
             builder.ObjectSpaceProviders
                 .AddSecuredXpo((serviceProvider, options) =>
@@ -91,9 +91,9 @@ public class Startup
             });
         }, Configuration);
 
-        // Register SyncReceiver services (SyncTypeMappings and SyncService)
-        // Type mappings are configured via the SyncTypeMappingConfig entity in the XAF UI
-        services.AddSyncReceiver();
+        // Register DataMirror services (MirrorTypeMappings and MirrorService)
+        // Type mappings are configured via the MirrorTypeMappingConfig entity in the XAF UI
+        services.AddDataMirror();
 
         services
             .AddControllers()

@@ -21,6 +21,6 @@
     <PackageReference Include="DevExpress.ExpressApp.Api.Xpo.All" Version="24.2.13-pre-25341" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cundi.XAF.SyncReceiver\Cundi.XAF.SyncReceiver.csproj" />
+    <ProjectReference Include="..\Cundi.XAF.DataMirror\Cundi.XAF.DataMirror.csproj" />
   </ItemGroup>
 </Project>

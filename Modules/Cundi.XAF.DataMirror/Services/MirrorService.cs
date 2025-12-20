@@ -1,35 +1,35 @@
-using Cundi.XAF.SyncReceiver.BusinessObjects;
-using Cundi.XAF.SyncReceiver.DTOs;
+using Cundi.XAF.DataMirror.BusinessObjects;
+using Cundi.XAF.DataMirror.DTOs;
 using DevExpress.ExpressApp;
 using System.Text.Json;
 
-namespace Cundi.XAF.SyncReceiver.Services;
+namespace Cundi.XAF.DataMirror.Services;
 
 /// <summary>
-/// Sync service for processing webhook sync requests.
+/// Mirror service for processing webhook mirror requests.
 /// </summary>
-public class SyncService
+public class MirrorService
 {
     private readonly IObjectSpaceFactory _objectSpaceFactory;
-    private readonly SyncTypeMappings _typeMappings;
+    private readonly MirrorTypeMappings _typeMappings;
 
-    public SyncService(IObjectSpaceFactory objectSpaceFactory, SyncTypeMappings typeMappings)
+    public MirrorService(IObjectSpaceFactory objectSpaceFactory, MirrorTypeMappings typeMappings)
     {
         _objectSpaceFactory = objectSpaceFactory;
         _typeMappings = typeMappings;
     }
 
     /// <summary>
-    /// Processes a sync payload from the webhook.
+    /// Processes a mirror payload from the webhook.
     /// </summary>
-    /// <param name="payload">The sync payload to process.</param>
-    /// <returns>The result of the sync operation.</returns>
-    public SyncResult ProcessSync(SyncPayloadDto payload)
+    /// <param name="payload">The mirror payload to process.</param>
+    /// <returns>The result of the mirror operation.</returns>
+    public MirrorResult ProcessMirror(MirrorPayloadDto payload)
     {
         // Parse event type
-        if (!Enum.TryParse<SyncEventType>(payload.EventType, true, out var eventType))
+        if (!Enum.TryParse<MirrorEventType>(payload.EventType, true, out var eventType))
         {
-            return SyncResult.Failure($"Invalid event type: {payload.EventType}");
+            return MirrorResult.Failure($"Invalid event type: {payload.EventType}");
         }
 
         // Parse object type (check type mappings first, then fall back to XafTypesInfo)
@@ -45,19 +45,19 @@ public class SyncService
 
         if (objectType == null)
         {
-            return SyncResult.Failure($"Unknown object type: {payload.ObjectType}. Add a type mapping using AddTypeMapping() method.");
+            return MirrorResult.Failure($"Unknown object type: {payload.ObjectType}. Add a type mapping using AddTypeMapping() method.");
         }
 
-        // Validate that the object type inherits from SyncableObject
-        if (!typeof(SyncableObject).IsAssignableFrom(objectType))
+        // Validate that the object type inherits from MirroredObject
+        if (!typeof(MirroredObject).IsAssignableFrom(objectType))
         {
-            return SyncResult.Failure($"Type {payload.ObjectType} does not inherit from SyncableObject and is not syncable.");
+            return MirrorResult.Failure($"Type {payload.ObjectType} does not inherit from MirroredObject and is not mirrorable.");
         }
 
         // Parse ObjectKey (Oid)
         if (!Guid.TryParse(payload.ObjectKey, out var oid))
         {
-            return SyncResult.Failure($"Invalid object key (must be a valid GUID): {payload.ObjectKey}");
+            return MirrorResult.Failure($"Invalid object key (must be a valid GUID): {payload.ObjectKey}");
         }
 
         // Execute the corresponding operation based on event type
@@ -65,19 +65,19 @@ public class SyncService
         {
             return eventType switch
             {
-                SyncEventType.Created => HandleCreated(objectType, oid, payload.Data),
-                SyncEventType.Modified => HandleModified(objectType, oid, payload.Data),
-                SyncEventType.Deleted => HandleDeleted(objectType, oid),
-                _ => SyncResult.Failure($"Unsupported event type: {eventType}")
+                MirrorEventType.Created => HandleCreated(objectType, oid, payload.Data),
+                MirrorEventType.Modified => HandleModified(objectType, oid, payload.Data),
+                MirrorEventType.Deleted => HandleDeleted(objectType, oid),
+                _ => MirrorResult.Failure($"Unsupported event type: {eventType}")
             };
         }
         catch (Exception ex)
         {
-            return SyncResult.Failure($"Error processing sync: {ex.Message}");
+            return MirrorResult.Failure($"Error processing mirror: {ex.Message}");
         }
     }
 
-    private SyncResult HandleCreated(Type objectType, Guid oid, Dictionary<string, object?>? data)
+    private MirrorResult HandleCreated(Type objectType, Guid oid, Dictionary<string, object?>? data)
     {
         using var objectSpace = _objectSpaceFactory.CreateObjectSpace(objectType);
 
@@ -85,11 +85,11 @@ public class SyncService
         var existing = objectSpace.GetObjectByKey(objectType, oid);
         if (existing != null)
         {
-            return SyncResult.Failure($"Object with Oid {oid} already exists. Use 'Modified' event to update.");
+            return MirrorResult.Failure($"Object with Oid {oid} already exists. Use 'Modified' event to update.");
         }
 
         // Create new object
-        var obj = (SyncableObject)objectSpace.CreateObject(objectType);
+        var obj = (MirroredObject)objectSpace.CreateObject(objectType);
         obj.Oid = oid;
         obj.SyncedAt = DateTime.UtcNow;
 
@@ -100,14 +100,14 @@ public class SyncService
         }
 
         objectSpace.CommitChanges();
-        return SyncResult.Success($"Successfully created object with Oid {oid}");
+        return MirrorResult.Success($"Successfully created object with Oid {oid}");
     }
 
-    private SyncResult HandleModified(Type objectType, Guid oid, Dictionary<string, object?>? data)
+    private MirrorResult HandleModified(Type objectType, Guid oid, Dictionary<string, object?>? data)
     {
         using var objectSpace = _objectSpaceFactory.CreateObjectSpace(objectType);
 
-        var obj = objectSpace.GetObjectByKey(objectType, oid) as SyncableObject;
+        var obj = objectSpace.GetObjectByKey(objectType, oid) as MirroredObject;
         if (obj == null)
         {
             // Object doesn't exist, create it (Upsert behavior)
@@ -123,22 +123,22 @@ public class SyncService
         obj.SyncedAt = DateTime.UtcNow;
 
         objectSpace.CommitChanges();
-        return SyncResult.Success($"Successfully modified object with Oid {oid}");
+        return MirrorResult.Success($"Successfully modified object with Oid {oid}");
     }
 
-    private SyncResult HandleDeleted(Type objectType, Guid oid)
+    private MirrorResult HandleDeleted(Type objectType, Guid oid)
     {
         using var objectSpace = _objectSpaceFactory.CreateObjectSpace(objectType);
 
         var obj = objectSpace.GetObjectByKey(objectType, oid);
         if (obj == null)
         {
-            return SyncResult.Success($"Object with Oid {oid} not found (already deleted or never existed).");
+            return MirrorResult.Success($"Object with Oid {oid} not found (already deleted or never existed).");
         }
 
         objectSpace.Delete(obj);
         objectSpace.CommitChanges();
-        return SyncResult.Success($"Successfully deleted object with Oid {oid}");
+        return MirrorResult.Success($"Successfully deleted object with Oid {oid}");
     }
 
     private void SetProperties(IObjectSpace objectSpace, object obj, Dictionary<string, object?> data)
@@ -199,7 +199,7 @@ public class SyncService
         }
 
         // Handle XPO reference objects (query by Oid)
-        if (typeof(SyncableObject).IsAssignableFrom(underlyingType) && value is string refOidStr)
+        if (typeof(MirroredObject).IsAssignableFrom(underlyingType) && value is string refOidStr)
         {
             if (Guid.TryParse(refOidStr, out var refOid))
             {
@@ -241,12 +241,12 @@ public class SyncService
 }
 
 /// <summary>
-/// Result of a sync operation.
+/// Result of a mirror operation.
 /// </summary>
-public class SyncResult
+public class MirrorResult
 {
     /// <summary>
-    /// Whether the sync operation was successful.
+    /// Whether the mirror operation was successful.
     /// </summary>
     public bool IsSuccess { get; set; }
 
@@ -258,10 +258,10 @@ public class SyncResult
     /// <summary>
     /// Creates a successful result with the specified message.
     /// </summary>
-    public static SyncResult Success(string message) => new() { IsSuccess = true, Message = message };
+    public static MirrorResult Success(string message) => new() { IsSuccess = true, Message = message };
 
     /// <summary>
     /// Creates a failure result with the specified message.
     /// </summary>
-    public static SyncResult Failure(string message) => new() { IsSuccess = false, Message = message };
+    public static MirrorResult Failure(string message) => new() { IsSuccess = false, Message = message };
 }

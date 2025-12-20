@@ -23,7 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\Cundi.XAF.ApiKey.Api\Cundi.XAF.ApiKey.Api.csproj" />
-    <ProjectReference Include="..\..\Modules\Cundi.XAF.SyncReceiver.Api\Cundi.XAF.SyncReceiver.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Cundi.XAF.DataMirror.Api\Cundi.XAF.DataMirror.Api.csproj" />
     <ProjectReference Include="..\Receiver.Module\Receiver.Module.csproj" />
   </ItemGroup>
 </Project>
