@@ -12,9 +12,4 @@ public sealed class FullTextSearchModule : ModuleBase
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.SystemModule.SystemModule));
     }
 
-    public override void Setup(XafApplication application)
-    {
-        base.Setup(application);
-    }
 }
-

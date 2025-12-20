@@ -140,7 +140,7 @@ public class Startup
                     AuthenticationType = JwtBearerDefaults.AuthenticationScheme
                 };
             })
-            .AddApiKey(); ;
+            .AddApiKey();
 
         services.AddAuthorization(options =>
         {

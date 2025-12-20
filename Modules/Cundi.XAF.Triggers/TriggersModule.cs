@@ -60,8 +60,4 @@ public sealed class TriggersModule : ModuleBase
         application.LoggedOn -= Application_LoggedOn;
     }
 
-    public override void CustomizeTypesInfo(ITypesInfo typesInfo)
-    {
-        base.CustomizeTypesInfo(typesInfo);
-    }
 }

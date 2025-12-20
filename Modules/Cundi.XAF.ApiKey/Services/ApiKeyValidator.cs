@@ -1,3 +1,4 @@
+#nullable enable
 using Cundi.XAF.ApiKey.BusinessObjects;
 using DevExpress.ExpressApp;
 

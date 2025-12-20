@@ -20,13 +20,4 @@ public sealed class ApiKeyModule : ModuleBase
         return new ModuleUpdater[] { updater };
     }
 
-    public override void Setup(XafApplication application)
-    {
-        base.Setup(application);
-    }
-
-    public override void CustomizeTypesInfo(ITypesInfo typesInfo)
-    {
-        base.CustomizeTypesInfo(typesInfo);
-    }
 }

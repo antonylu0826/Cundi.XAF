@@ -14,8 +14,4 @@ public sealed class DataMirrorApiModule : ModuleBase
         RequiredModuleTypes.Add(typeof(DataMirror.DataMirrorModule));
     }
 
-    public override void Setup(XafApplication application)
-    {
-        base.Setup(application);
-    }
 }

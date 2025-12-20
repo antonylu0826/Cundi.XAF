@@ -4,6 +4,11 @@ using DevExpress.Xpo;
 
 namespace Sample.Module.BusinessObjects;
 
+/// <summary>
+/// Test entity for Triggers module.
+/// Used to demonstrate trigger rules that fire on object creation, modification, or deletion.
+/// Trigger actions can include webhooks, email notifications, etc.
+/// </summary>
 [DefaultClassOptions]
 public class TriggerDemo : BaseObject
 {
