@@ -99,6 +99,24 @@ This API requires authentication. Supports:
 - **JWT Bearer Token**: Use `/api/Authentication/Authenticate` to obtain a token
 - **API Key**: Use `X-API-Key` header with a valid API key
 
+## API Write Protection
+
+When `services.AddDataMirror()` is called, all `MirroredObject`-derived types are automatically protected from API modifications:
+
+- ✅ **GET requests**: Allowed (read data via OData endpoints)
+- ❌ **POST requests**: Blocked (cannot create via OData)
+- ❌ **PUT/PATCH requests**: Blocked (cannot update via OData)
+- ❌ **DELETE requests**: Blocked (cannot delete via OData)
+
+**Data modification is only allowed via the Mirror API endpoint** (`/api/Mirror`), ensuring data integrity with the source system.
+
+If a client attempts to modify a MirroredObject via OData, they will receive an error response:
+```json
+{
+  "error": "Cannot modify 'SyncedTriggerDemo': MirroredObject types are read-only in the API. Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system."
+}
+```
+
 ## Related Modules
 
 - [Cundi.XAF.DataMirror](../Cundi.XAF.DataMirror/README.md) - Core module with business objects and services
@@ -107,3 +125,4 @@ This API requires authentication. Supports:
 ## License
 
 This project is licensed under the MIT License.
+

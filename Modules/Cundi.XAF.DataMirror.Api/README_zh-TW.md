@@ -99,6 +99,24 @@ services.AddDataMirror();
 - **JWT Bearer Token**：使用 `/api/Authentication/Authenticate` 取得令牌
 - **API Key**：使用 `X-API-Key` 標頭並提供有效的 API Key
 
+## API 寫入保護
+
+當呼叫 `services.AddDataMirror()` 時，所有 `MirroredObject` 衍生類型將自動受到 API 修改保護：
+
+- ✅ **GET 請求**：允許（透過 OData 端點讀取資料）
+- ❌ **POST 請求**：禁止（無法透過 OData 新增）
+- ❌ **PUT/PATCH 請求**：禁止（無法透過 OData 修改）
+- ❌ **DELETE 請求**：禁止（無法透過 OData 刪除）
+
+**資料修改只能透過 Mirror API 端點** (`/api/Mirror`) 進行，確保與來源系統的資料一致性。
+
+如果用戶端嘗試透過 OData 修改 MirroredObject，將收到錯誤回應：
+```json
+{
+  "error": "Cannot modify 'SyncedTriggerDemo': MirroredObject types are read-only in the API. Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system."
+}
+```
+
 ## 相關模組
 
 - [Cundi.XAF.DataMirror](../Cundi.XAF.DataMirror/README.md) - 包含業務物件和服務的核心模組
