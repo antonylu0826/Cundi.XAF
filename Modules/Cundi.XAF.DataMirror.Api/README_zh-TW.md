@@ -106,19 +106,21 @@ services.AddCompositeDataService();
 
 ## API 寫入保護
 
-當呼叫 `services.AddDataMirror()` 時，所有 `MirroredObject` 衍生類型將自動受到 API 修改保護：
+當呼叫 `services.AddDataMirror()` 時，標記 `[MirroredObjectProtection(true)]` 的 `MirroredObject` 衍生類型將自動受到 API 修改保護：
 
 - ✅ **GET 請求**：允許（透過 OData 端點讀取資料）
 - ❌ **POST 請求**：禁止（無法透過 OData 新增）
 - ❌ **PUT/PATCH 請求**：禁止（無法透過 OData 修改）
 - ❌ **DELETE 請求**：禁止（無法透過 OData 刪除）
 
-**資料修改只能透過 Mirror API 端點** (`/api/Mirror`) 進行，確保與來源系統的資料一致性。
+> **注意**：預設情況下，`MirroredObject` 衍生類別是**可透過 API 編輯的**。只有標記 `[MirroredObjectProtection(true)]` 的類型才受保護。
 
-如果用戶端嘗試透過 OData 修改 MirroredObject，將收到錯誤回應：
+**受保護類型的資料修改只能透過 Mirror API 端點** (`/api/Mirror`) 進行，確保與來源系統的資料一致性。
+
+如果用戶端嘗試透過 OData 修改受保護的 MirroredObject，將收到錯誤回應：
 ```json
 {
-  "error": "Cannot modify 'SyncedTriggerDemo': MirroredObject types are read-only in the API. Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system."
+  "error": "Cannot modify 'SyncedTriggerDemo': This MirroredObject type is protected and read-only in the API. Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system."
 }
 ```
 

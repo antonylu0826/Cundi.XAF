@@ -5,9 +5,10 @@ A DevExpress XAF module for receiving and processing mirrored data from webhooks
 ## Features
 
 - **MirroredObject Base Class**: Custom XPO base class that allows external Oid assignment for primary key synchronization
+- **Protection Attribute**: `[MirroredObjectProtection]` attribute to control whether objects are read-only or editable
 - **Dynamic Type Mappings**: Configure source-to-local type mappings via XAF UI (MirrorTypeMappingConfig), no code changes needed
-- **Automatic Read-Only Protection**: All `MirroredObject` derived classes are automatically read-only in the UI
-- **Auto-Hide New/Delete**: Automatically hides New and Delete buttons for all MirroredObject-derived classes
+- **Configurable Read-Only Protection**: Only `MirroredObject` derived classes marked with `[MirroredObjectProtection(true)]` are read-only
+- **Auto-Hide New/Delete**: Automatically hides New and Delete buttons for protected MirroredObject-derived classes
 - **Mirror Service**: Processes incoming webhook payloads and applies Create/Modify/Delete operations
 - **Upsert Support**: Automatically creates objects on Modified events if they don't exist
 - **Admin-Only Configuration**: Type mapping configuration is restricted to administrators only
@@ -33,16 +34,33 @@ RequiredModuleTypes.Add(typeof(Cundi.XAF.DataMirror.DataMirrorModule));
 Create a business object that inherits from `MirroredObject`:
 
 ```csharp
+using Cundi.XAF.DataMirror.Attributes;
 using Cundi.XAF.DataMirror.BusinessObjects;
 using DevExpress.Xpo;
 using DevExpress.Persistent.Base;
 
 namespace YourApp.Module.BusinessObjects;
 
+// Protected: Read-only in both UI and API
 [DefaultClassOptions]
-public class SyncedCustomer : MirroredObject  // Automatically read-only in UI
+[MirroredObjectProtection(true)]
+public class SyncedCustomer : MirroredObject
 {
     public SyncedCustomer(Session session) : base(session) { }
+
+    private string _name = string.Empty;
+    public string Name
+    {
+        get => _name;
+        set => SetPropertyValue(nameof(Name), ref _name, value);
+    }
+}
+
+// Editable: Can be modified in UI and API (default behavior)
+[DefaultClassOptions]
+public class EditableCustomer : MirroredObject
+{
+    public EditableCustomer(Session session) : base(session) { }
 
     private string _name = string.Empty;
     public string Name
@@ -73,9 +91,20 @@ Type mappings are configured dynamically via the XAF UI using `MirrorTypeMapping
 | `Oid` | Primary key that can be set externally for synchronization |
 | `SyncedAt` | Timestamp of the last sync from the source system |
 
+### Protection Attribute
+
+The `[MirroredObjectProtection]` attribute controls whether a `MirroredObject` derived class is protected from modifications:
+
+| Setting | UI Behavior | API Behavior |
+|---------|-------------|---------------|
+| `[MirroredObjectProtection(true)]` | Read-only, no New/Delete buttons | POST/PUT/DELETE blocked |
+| No attribute (default) | Fully editable | All operations allowed |
+
+> **Note**: By default, `MirroredObject` derived classes are **editable**. Add `[MirroredObjectProtection(true)]` to protect objects from modifications.
+
 ### Automatic UI Protection
 
-All classes inheriting from `MirroredObject` automatically:
+Classes marked with `[MirroredObjectProtection(true)]` automatically:
 - **Read-only in DetailView** (data can only be modified via mirror API)
 - **Hide New button** in ListView (data can only be created via mirror API)
 - **Hide Delete button** in both ListView and DetailView (prevents accidental deletion)
@@ -110,6 +139,8 @@ The module expects payloads in the format sent by `Cundi.XAF.Triggers`:
 
 ```
 Cundi.XAF.DataMirror/
+├── Attributes/
+│   └── MirroredObjectProtectionAttribute.cs  # Controls object protection behavior
 ├── BusinessObjects/
 │   ├── MirroredObject.cs              # Base class for mirrored objects
 │   └── MirrorTypeMappingConfig.cs     # Dynamic type mapping configuration

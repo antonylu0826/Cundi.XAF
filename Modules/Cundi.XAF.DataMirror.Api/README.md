@@ -106,19 +106,21 @@ This API requires authentication. Supports:
 
 ## API Write Protection
 
-When `services.AddDataMirror()` is called, all `MirroredObject`-derived types are automatically protected from API modifications:
+When `services.AddDataMirror()` is called, `MirroredObject`-derived types marked with `[MirroredObjectProtection(true)]` are automatically protected from API modifications:
 
 - ✅ **GET requests**: Allowed (read data via OData endpoints)
 - ❌ **POST requests**: Blocked (cannot create via OData)
 - ❌ **PUT/PATCH requests**: Blocked (cannot update via OData)
 - ❌ **DELETE requests**: Blocked (cannot delete via OData)
 
-**Data modification is only allowed via the Mirror API endpoint** (`/api/Mirror`), ensuring data integrity with the source system.
+> **Note**: By default, `MirroredObject` derived classes are **editable** via API. Only types marked with `[MirroredObjectProtection(true)]` are protected.
 
-If a client attempts to modify a MirroredObject via OData, they will receive an error response:
+**Data modification for protected types is only allowed via the Mirror API endpoint** (`/api/Mirror`), ensuring data integrity with the source system.
+
+If a client attempts to modify a protected MirroredObject via OData, they will receive an error response:
 ```json
 {
-  "error": "Cannot modify 'SyncedTriggerDemo': MirroredObject types are read-only in the API. Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system."
+  "error": "Cannot modify 'SyncedTriggerDemo': This MirroredObject type is protected and read-only in the API. Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system."
 }
 ```
 

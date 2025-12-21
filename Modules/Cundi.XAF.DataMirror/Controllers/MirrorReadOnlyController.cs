@@ -1,3 +1,5 @@
+#nullable enable
+using Cundi.XAF.DataMirror.Attributes;
 using Cundi.XAF.DataMirror.BusinessObjects;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.SystemModule;
@@ -6,7 +8,7 @@ namespace Cundi.XAF.DataMirror.Controllers;
 
 /// <summary>
 /// Controls the read-only behavior in DetailView for MirroredObject-derived classes.
-/// All classes inheriting from MirroredObject are read-only and cannot be edited in the UI.
+/// Only classes marked with [MirroredObjectProtection(true)] are read-only.
 /// </summary>
 public class MirrorReadOnlyController : ViewController<DetailView>
 {
@@ -19,25 +21,30 @@ public class MirrorReadOnlyController : ViewController<DetailView>
     {
         base.OnActivated();
 
-        // Disable editing - all MirroredObject are read-only
-        View.AllowEdit.SetItemValue("MirroredObject", false);
-
-        // Hide Delete button
-        var deleteController = Frame.GetController<DeleteObjectsViewController>();
-        if (deleteController != null)
+        // Only apply protection if the type is marked as protected
+        if (View.CurrentObject != null &&
+            MirroredObjectProtectionAttribute.IsTypeProtected(View.CurrentObject.GetType()))
         {
-            deleteController.DeleteAction.Active.SetItemValue("MirroredObject", false);
+            // Disable editing
+            View.AllowEdit.SetItemValue("MirroredObjectProtection", false);
+
+            // Hide Delete button
+            var deleteController = Frame.GetController<DeleteObjectsViewController>();
+            if (deleteController != null)
+            {
+                deleteController.DeleteAction.Active.SetItemValue("MirroredObjectProtection", false);
+            }
         }
     }
 
     protected override void OnDeactivated()
     {
-        View.AllowEdit.RemoveItem("MirroredObject");
+        View.AllowEdit.RemoveItem("MirroredObjectProtection");
 
         var deleteController = Frame.GetController<DeleteObjectsViewController>();
         if (deleteController != null)
         {
-            deleteController.DeleteAction.Active.RemoveItem("MirroredObject");
+            deleteController.DeleteAction.Active.RemoveItem("MirroredObjectProtection");
         }
 
         base.OnDeactivated();
@@ -46,6 +53,7 @@ public class MirrorReadOnlyController : ViewController<DetailView>
 
 /// <summary>
 /// Hides New and Delete buttons in ListView for MirroredObject-derived classes.
+/// Only classes marked with [MirroredObjectProtection(true)] are protected.
 /// </summary>
 public class MirroredObjectListViewController : ViewController<ListView>
 {
@@ -58,18 +66,23 @@ public class MirroredObjectListViewController : ViewController<ListView>
     {
         base.OnActivated();
 
-        // Hide the New action
-        var newObjectController = Frame.GetController<NewObjectViewController>();
-        if (newObjectController != null)
+        // Only apply protection if the type is marked as protected
+        if (View.ObjectTypeInfo?.Type != null &&
+            MirroredObjectProtectionAttribute.IsTypeProtected(View.ObjectTypeInfo.Type))
         {
-            newObjectController.NewObjectAction.Active.SetItemValue("MirroredObject", false);
-        }
+            // Hide the New action
+            var newObjectController = Frame.GetController<NewObjectViewController>();
+            if (newObjectController != null)
+            {
+                newObjectController.NewObjectAction.Active.SetItemValue("MirroredObjectProtection", false);
+            }
 
-        // Hide the Delete action
-        var deleteController = Frame.GetController<DeleteObjectsViewController>();
-        if (deleteController != null)
-        {
-            deleteController.DeleteAction.Active.SetItemValue("MirroredObject", false);
+            // Hide the Delete action
+            var deleteController = Frame.GetController<DeleteObjectsViewController>();
+            if (deleteController != null)
+            {
+                deleteController.DeleteAction.Active.SetItemValue("MirroredObjectProtection", false);
+            }
         }
     }
 
@@ -78,13 +91,13 @@ public class MirroredObjectListViewController : ViewController<ListView>
         var newObjectController = Frame.GetController<NewObjectViewController>();
         if (newObjectController != null)
         {
-            newObjectController.NewObjectAction.Active.RemoveItem("MirroredObject");
+            newObjectController.NewObjectAction.Active.RemoveItem("MirroredObjectProtection");
         }
 
         var deleteController = Frame.GetController<DeleteObjectsViewController>();
         if (deleteController != null)
         {
-            deleteController.DeleteAction.Active.RemoveItem("MirroredObject");
+            deleteController.DeleteAction.Active.RemoveItem("MirroredObjectProtection");
         }
 
         base.OnDeactivated();

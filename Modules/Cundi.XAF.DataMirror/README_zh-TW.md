@@ -5,9 +5,10 @@ DevExpress XAF 模組，用於接收和處理來自 Webhook 的鏡像資料。�
 ## 功能特色
 
 - **MirroredObject 基類**：自訂 XPO 基類，允許外部設定 Oid 以進行主鍵同步
+- **保護 Attribute**：`[MirroredObjectProtection]` 屬性控制物件是否唯讀或可編輯
 - **動態類型對應**：透過 XAF UI (MirrorTypeMappingConfig) 設定來源到本地類型的對應，無需修改程式碼
-- **自動唯讀保護**：所有繼承自 `MirroredObject` 的類別在 UI 中自動設為唯讀
-- **自動隱藏新增/刪除**：自動隱藏 MirroredObject 衍生類別的新增和刪除按鈕
+- **可設定唯讀保護**：只有標記 `[MirroredObjectProtection(true)]` 的 `MirroredObject` 衍生類別才是唯讀
+- **自動隱藏新增/刪除**：自動隱藏受保護的 MirroredObject 衍生類別的新增和刪除按鈕
 - **鏡像服務**：處理傳入的 Webhook 資料並套用建立/修改/刪除操作
 - **Upsert 支援**：在修改事件中若物件不存在則自動建立
 - **限制管理員存取**：類型對應設定只有管理員才能存取
@@ -33,16 +34,33 @@ RequiredModuleTypes.Add(typeof(Cundi.XAF.DataMirror.DataMirrorModule));
 建立繼承自 `MirroredObject` 的業務物件：
 
 ```csharp
+using Cundi.XAF.DataMirror.Attributes;
 using Cundi.XAF.DataMirror.BusinessObjects;
 using DevExpress.Xpo;
 using DevExpress.Persistent.Base;
 
 namespace YourApp.Module.BusinessObjects;
 
+// 受保護：UI 和 API 中都是唯讀
 [DefaultClassOptions]
-public class SyncedCustomer : MirroredObject  // 在 UI 中自動唯讀
+[MirroredObjectProtection(true)]
+public class SyncedCustomer : MirroredObject
 {
     public SyncedCustomer(Session session) : base(session) { }
+
+    private string _name = string.Empty;
+    public string Name
+    {
+        get => _name;
+        set => SetPropertyValue(nameof(Name), ref _name, value);
+    }
+}
+
+// 可編輯：可以在 UI 和 API 中修改（預設行為）
+[DefaultClassOptions]
+public class EditableCustomer : MirroredObject
+{
+    public EditableCustomer(Session session) : base(session) { }
 
     private string _name = string.Empty;
     public string Name
@@ -73,9 +91,20 @@ public class SyncedCustomer : MirroredObject  // 在 UI 中自動唯讀
 | `Oid` | 可從外部設定以進行同步的主鍵 |
 | `SyncedAt` | 從來源系統最後一次同步的時間戳記 |
 
+### 保護 Attribute
+
+`[MirroredObjectProtection]` 屬性控制 `MirroredObject` 衍生類別是否受保護不能異動：
+
+| 設定 | UI 行為 | API 行為 |
+|------|---------|----------|
+| `[MirroredObjectProtection(true)]` | 唯讀，無新增/刪除按鈕 | POST/PUT/DELETE 被阻擋 |
+| 無標記（預設） | 可完整編輯 | 允許所有操作 |
+
+> **注意**：預設情況下，`MirroredObject` 衍生類別是**可編輯的**。請加上 `[MirroredObjectProtection(true)]` 來保護物件不被修改。
+
 ### 自動 UI 保護
 
-所有繼承自 `MirroredObject` 的類別自動：
+標記 `[MirroredObjectProtection(true)]` 的類別自動：
 - **DetailView 唯讀**（資料只能透過 Mirror API 修改）
 - **隱藏 ListView 新增按鈕**（資料只能透過 Mirror API 建立）
 - **在 ListView 和 DetailView 中隱藏刪除按鈕**（防止意外刪除）
@@ -110,6 +139,8 @@ public class SyncedCustomer : MirroredObject  // 在 UI 中自動唯讀
 
 ```
 Cundi.XAF.DataMirror/
+├── Attributes/
+│   └── MirroredObjectProtectionAttribute.cs  # 控制物件保護行為
 ├── BusinessObjects/
 │   ├── MirroredObject.cs              # 鏡像物件基類
 │   └── MirrorTypeMappingConfig.cs     # 動態類型對應設定

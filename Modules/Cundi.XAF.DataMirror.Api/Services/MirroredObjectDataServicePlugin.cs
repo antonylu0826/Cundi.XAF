@@ -1,13 +1,14 @@
 #nullable enable
 using Cundi.XAF.Core.Api;
+using Cundi.XAF.DataMirror.Attributes;
 using Cundi.XAF.DataMirror.BusinessObjects;
 using DevExpress.ExpressApp;
 
 namespace Cundi.XAF.DataMirror.Api.Services;
 
 /// <summary>
-/// DataService plugin that prevents Create/Update/Delete operations on MirroredObject-derived types.
-/// MirroredObject types are read-only in the API - they can only be modified via the Mirror API endpoint.
+/// DataService plugin that prevents Create/Update/Delete operations on protected MirroredObject-derived types.
+/// Only types marked with [MirroredObjectProtection(true)] are protected - they can only be modified via the Mirror API endpoint.
 /// </summary>
 public class MirroredObjectDataServicePlugin : IDataServicePlugin
 {
@@ -26,7 +27,7 @@ public class MirroredObjectDataServicePlugin : IDataServicePlugin
     }
 
     /// <summary>
-    /// Intercepts object commits and blocks Create/Update/Delete on MirroredObject types.
+    /// Intercepts object commits and blocks Create/Update/Delete on protected MirroredObject types.
     /// </summary>
     private void Os_Committing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
@@ -35,10 +36,10 @@ public class MirroredObjectDataServicePlugin : IDataServicePlugin
         // Check all modified objects
         foreach (var obj in os.ModifiedObjects)
         {
-            if (obj is MirroredObject)
+            if (obj is MirroredObject && MirroredObjectProtectionAttribute.IsTypeProtected(obj.GetType()))
             {
                 throw new InvalidOperationException(
-                    $"Cannot modify '{obj.GetType().Name}': MirroredObject types are read-only in the API. " +
+                    $"Cannot modify '{obj.GetType().Name}': This MirroredObject type is protected and read-only in the API. " +
                     $"Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system.");
             }
         }
@@ -46,12 +47,13 @@ public class MirroredObjectDataServicePlugin : IDataServicePlugin
         // Check objects to delete
         foreach (var obj in os.GetObjectsToDelete(true))
         {
-            if (obj is MirroredObject)
+            if (obj is MirroredObject && MirroredObjectProtectionAttribute.IsTypeProtected(obj.GetType()))
             {
                 throw new InvalidOperationException(
-                    $"Cannot delete '{obj.GetType().Name}': MirroredObject types are read-only in the API. " +
+                    $"Cannot delete '{obj.GetType().Name}': This MirroredObject type is protected and read-only in the API. " +
                     $"Use the Mirror API endpoint (/api/Mirror) to synchronize data from the source system.");
             }
         }
     }
 }
+
