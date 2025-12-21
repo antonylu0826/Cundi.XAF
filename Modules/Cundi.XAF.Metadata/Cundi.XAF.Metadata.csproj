@@ -2,15 +2,16 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
-    <Deterministic>false</Deterministic>
-    <AssemblyVersion>1.0.*</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
     <Configurations>Debug;Release;EasyTest</Configurations>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>XAF module for scanning and recording system metadata (Types and Properties).</Description>
+    <PackageTags>XAF;DevExpress;Metadata;Types;Properties</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
     <None Remove="Model.DesignedDiffs.xafml" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
@@ -28,3 +29,4 @@
     <PackageReference Include="DevExpress.Persistent.BaseImpl.Xpo" Version="24.2.13-pre-25341" />
   </ItemGroup>
 </Project>
+

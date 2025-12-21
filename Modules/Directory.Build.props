@@ -1,0 +1,30 @@
+<Project>
+  <PropertyGroup>
+    <!-- 版本資訊 -->
+    <Version>1.0.0</Version>
+    <PackageVersion>1.0.0</PackageVersion>
+    
+    <!-- 套件元資料 -->
+    <Authors>Antony Lu</Authors>
+    <Company>Antony Lu</Company>
+    <Copyright>Copyright © 2024 Antony Lu</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/antonylu0826/Cundi</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/antonylu0826/Cundi</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>XAF;DevExpress;ERP;Module</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    
+    <!-- NuGet 套件產生設定 -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\nupkg</PackageOutputPath>
+    
+    <!-- 文件與符號 -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    
+    <!-- 版本設定覆蓋 - 使用固定版本 -->
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

@@ -1,26 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<CheckEolTargetFramework>false</CheckEolTargetFramework>
-		<Deterministic>false</Deterministic>
-		<AssemblyVersion>1.0.*</AssemblyVersion>
-		<FileVersion>1.0.0.0</FileVersion>
-		<Configurations>Debug;Release;EasyTest</Configurations>
-		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Remove="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
-		<None Remove="Model.DesignedDiffs.xafml" />
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
-		<EmbeddedResource Include="Model.DesignedDiffs.xafml" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="DevExpress.ExpressApp.Api.Xpo.All" Version="24.2.13-pre-25341" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\Cundi.XAF.Core.Api\Cundi.XAF.Core.Api.csproj" />
-	  <ProjectReference Include="..\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />
-	</ItemGroup>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <Configurations>Debug;Release;EasyTest</Configurations>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>Web API integration for the Cundi.XAF.Triggers module.</Description>
+    <PackageTags>XAF;DevExpress;Triggers;Webhook;API</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
+    <None Remove="Model.DesignedDiffs.xafml" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Model.DesignedDiffs.Localization.zh-Hant-TW.xafml" />
+    <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.ExpressApp.WebApi" Version="24.2.13-pre-25341" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cundi.XAF.Core.Api\Cundi.XAF.Core.Api.csproj" />
+    <ProjectReference Include="..\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />
+  </ItemGroup>
 </Project>
+
