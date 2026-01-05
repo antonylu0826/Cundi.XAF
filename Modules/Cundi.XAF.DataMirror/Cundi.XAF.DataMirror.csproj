@@ -18,15 +18,16 @@
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="24.2.13-pre-25341">
+    <PackageReference Include="DevExpress.ExpressApp" Version="25.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="25.2.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DevExpress.ExpressApp.Xpo" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.Persistent.Base" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.Persistent.BaseImpl.Xpo" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.ExpressApp.Security" Version="24.2.13-pre-25341" />
+    <PackageReference Include="DevExpress.ExpressApp.Xpo" Version="25.2.3" />
+    <PackageReference Include="DevExpress.Persistent.Base" Version="25.2.3" />
+    <PackageReference Include="DevExpress.Persistent.BaseImpl.Xpo" Version="25.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.Security" Version="25.2.3" />
+  
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
   </ItemGroup>
 </Project>
-

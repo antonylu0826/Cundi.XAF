@@ -18,12 +18,11 @@
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp.WebApi" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.ExpressApp.Security" Version="24.2.13-pre-25341" />
+    <PackageReference Include="DevExpress.ExpressApp.WebApi" Version="25.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.Security" Version="25.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cundi.XAF.ApiKey\Cundi.XAF.ApiKey.csproj" />
   </ItemGroup>
 </Project>
-

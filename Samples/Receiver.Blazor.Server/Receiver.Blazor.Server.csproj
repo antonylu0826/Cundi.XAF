@@ -17,15 +17,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.Blazor.Themes" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.Drawing.Skia" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="24.2.13-pre-25341">
+    <PackageReference Include="DevExpress.Blazor.Themes" Version="25.2.3" />
+    <PackageReference Include="DevExpress.Drawing.Skia" Version="25.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="25.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="25.2.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="DevExpress.ExpressApp.Security.Xpo" Version="24.2.13-pre-25341" />
-    <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="24.2.13-pre-25341" />
+    <PackageReference Include="DevExpress.ExpressApp.Security.Xpo" Version="25.2.3" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation.Blazor" Version="25.2.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Receiver.Module\Receiver.Module.csproj" />

@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <BOModel>
+    <Class Name="Sample.Module.BusinessObjects.SearchableDocument" Caption="可全文檢索文件" />
+    <Class Name="Sample.Module.BusinessObjects.SearchableProduct" Caption="可全文檢索產品" />
+  </BOModel>
+</Application>

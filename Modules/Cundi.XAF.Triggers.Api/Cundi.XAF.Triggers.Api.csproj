@@ -18,11 +18,10 @@
     <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExpress.ExpressApp.WebApi" Version="24.2.13-pre-25341" />
+    <PackageReference Include="DevExpress.ExpressApp.WebApi" Version="25.2.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cundi.XAF.Core.Api\Cundi.XAF.Core.Api.csproj" />
     <ProjectReference Include="..\Cundi.XAF.Triggers\Cundi.XAF.Triggers.csproj" />
   </ItemGroup>
 </Project>
-

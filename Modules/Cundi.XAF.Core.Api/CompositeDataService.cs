@@ -16,8 +16,8 @@ public class CompositeDataService : DataService
     public CompositeDataService(
         IObjectSpaceFactory objectSpaceFactory,
         ITypesInfo typesInfo,
-        IEnumerable<IDataServicePlugin> plugins)
-        : base(objectSpaceFactory, typesInfo)
+        IEnumerable<IDataServicePlugin> plugins, IObjectDeltaHandler deltaHandler)
+        : base(objectSpaceFactory, typesInfo, deltaHandler)
     {
         // Order plugins by their Order property (lower values execute first)
         _plugins = plugins.OrderBy(p => p.Order).ToList();

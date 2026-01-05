@@ -3,6 +3,7 @@ using Cundi.XAF.FullTextSearch.Services;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Cundi.XAF.FullTextSearch.Controllers;
 
@@ -43,12 +44,7 @@ public class GlobalSearchController : WindowController
 
         var appType = Application.GetType().FullName ?? "";
 
-        if (appType.Contains("Blazor"))
-        {
-            // Blazor: Place action in header near user icon
-            _searchAction.Category = "QuickAccess";
-        }
-        else
+        if (!appType.Contains("Blazor"))
         {
             // WinForms: Place action in Tools toolbar
             _searchAction.Category = "Tools";

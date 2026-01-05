@@ -3,6 +3,7 @@ using Cundi.XAF.FullTextSearch.BusinessObjects;
 using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Utils;
 
 namespace Cundi.XAF.FullTextSearch.Services;
 
@@ -126,7 +127,7 @@ public class GlobalSearchService
                 TargetObjectType = typeInfo.Type,
                 TargetObjectKey = keyValue?.ToString(),
                 DisplayName = displayName,
-                TypeCaption = typeInfo.Name,
+                TypeCaption = CaptionHelper.GetClassCaption(typeInfo.FullName),
                 MatchedContent = matchedContent
             });
 

@@ -110,7 +110,7 @@ public class Startup
             .AddOData((options, serviceProvider) =>
             {
                 options
-                    .AddRouteComponents("api/odata", new EdmModelBuilder(serviceProvider).GetEdmModel())
+                    .AddRouteComponents("api/odata", new EdmModelBuilder(serviceProvider).GetEdmModel(), Microsoft.OData.ODataVersion.V401, _routeServices => { _routeServices.ConfigureXafWebApiServices(); })
                     .EnableQueryFeatures(100);
             });
 

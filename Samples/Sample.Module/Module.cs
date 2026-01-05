@@ -23,7 +23,7 @@ public sealed class SampleModule : ModuleBase
         AdditionalExportedTypes.Add(typeof(DevExpress.Persistent.BaseImpl.HCategory));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.SystemModule.SystemModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Security.SecurityModule));
-        RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Objects.BusinessClassLibraryCustomizationModule));
+        //RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Objects.BusinessClassLibraryCustomizationModule)); //https://devexpress.com/kb=T1312589
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Chart.ChartModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ConditionalAppearance.ConditionalAppearanceModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Dashboards.DashboardsModule));
@@ -35,7 +35,6 @@ public sealed class SampleModule : ModuleBase
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ViewVariantsModule.ViewVariantsModule));
 
-        RequiredModuleTypes.Add(typeof(Cundi.XAF.Metadata.MetadataModule));
         RequiredModuleTypes.Add(typeof(Cundi.XAF.Triggers.TriggersModule));
         RequiredModuleTypes.Add(typeof(Cundi.XAF.FullTextSearch.FullTextSearchModule));
         RequiredModuleTypes.Add(typeof(Cundi.XAF.ApiKey.ApiKeyModule));
